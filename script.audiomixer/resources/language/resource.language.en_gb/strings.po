@@ -1,0 +1,19 @@
+# Kodi Media Center language file
+msgid ""
+msgstr ""
+
+msgctxt "#30000"
+msgid "General"
+msgstr "General"
+
+msgctxt "#30001"
+msgid "Equalizer APO config.txt path"
+msgstr "Equalizer APO config.txt path"
+
+msgctxt "#30002"
+msgid "Default mode on open"
+msgstr "Default mode on open"
+
+msgctxt "#30003"
+msgid "Write delay (ms)"
+msgstr "Write delay (ms)"

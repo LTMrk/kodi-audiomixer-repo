@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+<addon id="script.audiomixer"
+       name="Audio Channel Mixer (EQ APO)"
+       version="1.0.0"
+       provider-name="LTMrk">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.script" library="main.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="es_ES">Control de volumen por canal (5.1) sobre Equalizer APO</summary>
+        <summary lang="en_GB">Per-channel volume control (5.1) via Equalizer APO</summary>
+        <description lang="es_ES">Permite ajustar en tiempo real la ganancia de cada canal de origen (L, R, C, LFE, SL, SR) dentro de la mezcla final a estereo que hace Equalizer APO. Incluye un modo simple de 4 controles (Frontales, Central, LFE, Surround) y un modo avanzado de 12 controles (contribucion de cada canal a L y a R por separado).</description>
+        <description lang="en_GB">Adjusts in real time the gain of each source channel (L, R, C, LFE, SL, SR) within the final stereo downmix produced by Equalizer APO. Includes a simple 4-slider mode (Front, Center, LFE, Surround) and an advanced 12-slider mode (each channel's contribution to L and to R separately).</description>
+        <platform>windows</platform>
+        <language>es_ES en_GB</language>
+        <license>MIT</license>
+        <source>https://github.com/LTMrk/kodi-audiomixer-repo</source>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+<addon id="repository.audiomixerrepo"
+       name="Audio Mixer Repository"
+       version="1.0.0"
+       provider-name="LTMrk">
+    <extension point="xbmc.addon.repository" name="Audio Mixer Repository">
+        <dir>
+            <info compressed="false">https://raw.githubusercontent.com/LTMrk/kodi-audiomixer-repo/main/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/LTMrk/kodi-audiomixer-repo/main/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/LTMrk/kodi-audiomixer-repo/main/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="es_ES">Repositorio del addon Audio Channel Mixer (EQ APO)</summary>
+        <summary lang="en_GB">Repository for the Audio Channel Mixer (EQ APO) addon</summary>
+        <description lang="es_ES">Repositorio Kodi para instalar y actualizar automaticamente el addon Audio Channel Mixer (EQ APO), que controla la mezcla de canales de audio 5.1 sobre Equalizer APO.</description>
+        <description lang="en_GB">Kodi repository to install and auto-update the Audio Channel Mixer (EQ APO) addon, which controls 5.1 channel mixing on top of Equalizer APO.</description>
+        <platform>all</platform>
+        <license>MIT</license>
+        <source>https://github.com/LTMrk/kodi-audiomixer-repo</source>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+</addons>
