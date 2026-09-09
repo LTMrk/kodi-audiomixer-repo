@@ -17,3 +17,7 @@ msgstr "Modo por defecto al abrir"
 msgctxt "#30003"
 msgid "Retardo de escritura (ms)"
 msgstr "Retardo de escritura (ms)"
+
+msgctxt "#30010"
+msgid "Mezclador de canales (Audio Channel Mixer)"
+msgstr "Mezclador de canales (Audio Channel Mixer)"

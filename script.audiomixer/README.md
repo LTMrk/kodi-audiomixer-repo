@@ -31,7 +31,10 @@ Antes de usarlo, entra en **Complementos > Mis complementos > Audio Channel Mixe
 
 ## Uso
 
-- Abre el addon mientras reproduces algo en Kodi (puedes asignarle una tecla en `keymap.xml` para acceso rapido).
+- **Mientras reproduces video**, abre el menu contextual (boton de contexto del mando/skin,
+  tecla `C` en teclado, o el icono "..." del OSD en skins como Estuary) y elige
+  **"Mezclador de canales (Audio Channel Mixer)"**. Tambien puedes abrirlo en cualquier
+  momento desde **Complementos > Complementos de programa > Audio Channel Mixer**.
 - Mueve los sliders con las flechas del mando/teclado.
 - **Modo Simple**: 50% = mezcla estandar (sin cambios), 100% = doble de ganancia, 0% = silenciado.
 - **Modo Avanzado**: el valor del slider es el coeficiente directo (0% a 200%) con el que ese canal de origen entra en esa salida.
@@ -42,3 +45,19 @@ Antes de usarlo, entra en **Complementos > Mis complementos > Audio Channel Mixe
 
 - El addon nunca borra el resto de tu `config.txt`: solo gestiona el contenido entre las marcas `# BEGIN KODI AUDIOMIXER` y `# END KODI AUDIOMIXER`.
 - Si escribir el archivo falla (por ejemplo por permisos de `Program Files`), da permisos de escritura a tu usuario sobre la carpeta `EqualizerAPO\config`.
+
+## Que pasa si algo no esta bien configurado
+
+Antes de abrir la ventana del mezclador, el addon comprueba el entorno y avisa con un
+dialogo explicando el problema (en vez de fallar en silencio o con un error tecnico) si:
+
+- No estas en Windows (el addon solo funciona con Equalizer APO, que es Windows-only).
+- No hay una ruta de `config.txt` configurada en los Ajustes del addon.
+- La carpeta configurada no existe (probable indicio de que Equalizer APO no esta instalado,
+  o la ruta esta mal).
+- `config.txt` no existe en esa ruta: te pregunta si quieres continuar de todas formas
+  (creara el archivo) o cancelar para revisar la ruta.
+- No hay permisos de escritura sobre esa carpeta: te lo dice explicitamente en vez de morir
+  con una excepcion.
+- Cualquier otro error inesperado al abrir la ventana queda registrado en el log de Kodi
+  y se muestra un aviso, en lugar de un cierre silencioso del addon.

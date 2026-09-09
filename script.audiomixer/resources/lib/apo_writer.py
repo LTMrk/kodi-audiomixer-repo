@@ -13,8 +13,11 @@ class ApoWriteError(Exception):
 def _read_lines(path):
     if not os.path.exists(path):
         return []
-    with io.open(path, "r", encoding="utf-8", errors="replace") as f:
-        return f.read().splitlines()
+    try:
+        with io.open(path, "r", encoding="utf-8", errors="replace") as f:
+            return f.read().splitlines()
+    except (IOError, OSError) as e:
+        raise ApoWriteError(str(e))
 
 
 def _find_block(lines):

@@ -17,3 +17,7 @@ msgstr "Default mode on open"
 msgctxt "#30003"
 msgid "Write delay (ms)"
 msgstr "Write delay (ms)"
+
+msgctxt "#30010"
+msgid "Audio Channel Mixer"
+msgstr "Audio Channel Mixer"
