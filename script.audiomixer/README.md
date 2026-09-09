@@ -99,9 +99,11 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   a emparejar la tecla. Al cambiar de tecla se reinstala el atajo automaticamente.
   Ojo: si tu mando es un "air mouse" tipo **MX3** (muy comun), los 4 botones de colores son
   **solo IR** (no mandan nada por el dongle 2.4G) y no sirven para esto; usa otro boton que sí
-  se vea reflejado en el log al pulsarlo.
-
-## Uso
+  se vea reflejado en el log al pulsarlo. El campo "Tecla rapida actual" es **de solo lectura**
+  (solo lo cambia "Elegir tecla rapida...") -- si escribieras ahi un texto como `f200` a mano,
+  Kodi lo interpretaria como el NOMBRE literal de una tecla (que no existe), no como el
+  hexadecimal `0xf200`, y el atajo se quedaria roto sin avisar; por eso ya no se puede editar
+  directamente.
 
 - Pulsa tu **tecla rapida** (F9 por defecto, configurable en Ajustes) en cualquier pantalla
   (incluida la reproduccion de video a pantalla completa) para abrir el mezclador directamente.

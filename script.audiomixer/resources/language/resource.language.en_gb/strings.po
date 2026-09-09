@@ -59,8 +59,8 @@ msgid "Keep existing config.txt content"
 msgstr "Keep existing config.txt content"
 
 msgctxt "#30020"
-msgid "Current hotkey"
-msgstr "Current hotkey"
+msgid "Current hotkey (read-only, change it below)"
+msgstr "Current hotkey (read-only, change it below)"
 
 msgctxt "#30021"
 msgid "Keyboard shortcut installed: press that key on any screen (including video) to open the mixer. If it doesn't work right away, restart Kodi."

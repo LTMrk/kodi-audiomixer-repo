@@ -59,8 +59,8 @@ msgid "Conservar configuracion existente en config.txt"
 msgstr "Conservar configuracion existente en config.txt"
 
 msgctxt "#30020"
-msgid "Tecla rapida actual"
-msgstr "Tecla rapida actual"
+msgid "Tecla rapida actual (solo lectura, cambiala abajo)"
+msgstr "Tecla rapida actual (solo lectura, cambiala abajo)"
 
 msgctxt "#30021"
 msgid "Atajo de teclado instalado: pulsa esa tecla en cualquier pantalla (incluido el video) para abrir el mezclador. Si no funciona a la primera, reinicia Kodi."

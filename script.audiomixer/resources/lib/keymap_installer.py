@@ -8,6 +8,13 @@ import os
 import xbmc
 import xbmcvfs
 
+LOG_TAG = "[script.audiomixer]"
+
+
+def _log(msg):
+    xbmc.log("%s [keymap_installer] %s" % (LOG_TAG, msg), xbmc.LOGINFO)
+
+
 KEYMAP_FILENAME = "script.audiomixer.xml"
 DEFAULT_KEY = "f9"
 
@@ -46,8 +53,24 @@ KEYMAP_TEMPLATE_RAW = """<keymap>
 
 
 def _keymap_xml(key):
-    template = KEYMAP_TEMPLATE_RAW if str(key).isdigit() else KEYMAP_TEMPLATE_NAMED
-    return template.format(key=key)
+    """Genera el XML del keymap para 'key'. Valida contra las dos unicas
+    formas que este addon escribe realmente (digitos puros = id decimal
+    ya convertido por main.py._pick_hotkey(), o uno de AVAILABLE_KEYS) --
+    cualquier otra cosa (p.ej. alguien edito a mano el campo de texto
+    "Tecla rapida actual" en Ajustes con un hexadecimal como "f200" en vez
+    de usar "Elegir tecla rapida...") se rechaza y se usa DEFAULT_KEY: un
+    tag <f200> generado a partir de eso NO es un nombre de tecla valido de
+    Kodi (solo "f2".."f12" etc. lo son) y el atajo se quedaria roto en
+    silencio sin este resguardo."""
+    text = str(key).strip().lower()
+    if text.isdigit():
+        return KEYMAP_TEMPLATE_RAW.format(key=text)
+    if text in AVAILABLE_KEYS:
+        return KEYMAP_TEMPLATE_NAMED.format(key=text)
+    _log("tecla invalida %r (revisa 'Tecla rapida actual' en Ajustes -- "
+         "usa 'Elegir tecla rapida...' en vez de escribir ahi a mano), "
+         "usando la de por defecto (%s)" % (key, DEFAULT_KEY))
+    return KEYMAP_TEMPLATE_NAMED.format(key=DEFAULT_KEY)
 
 
 def _keymaps_dir():

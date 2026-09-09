@@ -88,9 +88,17 @@ def get_keep_existing_config():
 
 
 def get_hotkey():
+    """El campo "Tecla rapida actual" de Ajustes es de solo lectura
+    (enable="false" en settings.xml) para evitar que se edite a mano con
+    un texto que no sea ni un id decimal ni un nombre de tecla valido --
+    pero por si acaso (versiones antiguas del addon que aun lo dejaban
+    editable, o un valor corrupto), se valida aqui tambien antes de
+    usarlo para instalar el keymap."""
     from . import keymap_installer
     key = (ADDON.getSettingString("hotkey") or "").strip().lower()
-    return key or keymap_installer.DEFAULT_KEY
+    if key.isdigit() or key in keymap_installer.AVAILABLE_KEYS:
+        return key
+    return keymap_installer.DEFAULT_KEY
 
 
 def set_hotkey(key):
