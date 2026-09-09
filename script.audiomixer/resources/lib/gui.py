@@ -314,6 +314,14 @@ class MixerWindow(xbmcgui.WindowDialog):
             self._last_written_key = state_key
             self._pending = False
 
+    def _force_write(self):
+        """Escritura inmediata sin esperar al debounce, para garantizar que
+        el ultimo cambio quede guardado sin importar como se cierre la
+        ventana (boton, Atras, o salir justo tras mover un slider)."""
+        self._pending = True
+        self._last_change_ts = 0
+        self._maybe_write()
+
     # ---------------------------------------------------------- bucle principal
     def run(self):
         self.show()
@@ -323,4 +331,5 @@ class MixerWindow(xbmcgui.WindowDialog):
             self._maybe_write()
             if monitor.waitForAbort(0.1):
                 break
+        self._force_write()
         self.close()
