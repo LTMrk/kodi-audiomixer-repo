@@ -49,37 +49,25 @@ def _pick_device():
 
 def _install_keymap(force):
     # keymap_installer.install(force=True) siempre escribe y devuelve True;
-    # con force=False solo escribe (y por tanto solo avisa) si todavia no
-    # estaba instalado.
-    if keymap_installer.install(force=force):
+    # con force=False solo escribe (y por tanto solo avisa) si la tecla
+    # configurada no coincide con lo que hay instalado.
+    if keymap_installer.install(settings.get_hotkey(), force=force):
         xbmcgui.Dialog().notification(
-            ADDON_NAME, _L(30021), xbmcgui.NOTIFICATION_INFO, 6000)
+            ADDON_NAME, "%s: %s" % (_L(30021), settings.get_hotkey().upper()),
+            xbmcgui.NOTIFICATION_INFO, 6000)
 
 
-def _strip_own_include_line(config_path, local_write_path):
-    """Quita (si existe) la linea 'Include: ...' que apunta al archivo de
-    respaldo del addon, cuando ya no hace falta porque se esta escribiendo
-    directamente en config.txt (opcion A). No toca ninguna otra linea del
-    archivo (Peace GUI, etc. quedan intactos). Devuelve True si se quito
-    algo."""
-    try:
-        with open(config_path, "r", encoding="utf-8", errors="replace") as f:
-            lines = f.read().splitlines()
-    except OSError:
-        return False
-
-    needle = local_write_path.lower()
-    new_lines = [l for l in lines
-                 if not (l.strip().lower().startswith("include:") and needle in l.lower())]
-    if len(new_lines) == len(lines):
-        return False
-
-    try:
-        with open(config_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(new_lines) + ("\n" if new_lines else ""))
-    except OSError:
-        return False
-    return True
+def _pick_hotkey():
+    """Deja elegir la tecla rapida entre las disponibles y reinstala el
+    keymap con ella. Invocado desde Ajustes."""
+    keys = keymap_installer.AVAILABLE_KEYS
+    current = settings.get_hotkey()
+    labels = [k.upper() + ("  (actual)" if k == current else "") for k in keys]
+    idx = xbmcgui.Dialog().select(_L(30022), labels)
+    if idx < 0:
+        return
+    settings.set_hotkey(keys[idx])
+    _install_keymap(force=True)
 
 
 def _include_already_configured(write_path):
@@ -140,16 +128,19 @@ def _check_prerequisites():
             "El addon ya esta listo para usarse mientras tanto; el "
             "audio no cambiara hasta que anadas esa linea." % settings.get_include_line())
     elif not using_fallback and not settings.get_keep_existing_config():
-        # Opcion A funcionando y el usuario ha pedido limpieza: si quedo
-        # una linea "Include:" de una sesion anterior en la que hizo falta
-        # la opcion B, ya no sirve de nada -- se quita, sin tocar nada mas
-        # del archivo (Peace GUI, etc. se dejan intactos).
-        local_path = settings.get_local_write_path()
-        if _strip_own_include_line(write_path, local_path):
-            xbmcgui.Dialog().notification(
-                ADDON_NAME,
-                "Se elimino de config.txt una linea Include: que ya no hacia falta.",
-                xbmcgui.NOTIFICATION_INFO, 4000)
+        # Opcion A funcionando y el usuario ha pedido NO conservar nada
+        # ajeno: se reescribe config.txt dejando solo los bloques propios
+        # del addon (de todos los dispositivos configurados), descartando
+        # cualquier otra cosa (Peace GUI, comentarios de Equalizer APO,
+        # etc.). apo_writer.validate() de mas arriba ya garantiza que las
+        # marcas estan bien formadas antes de llegar aqui.
+        try:
+            if apo_writer.rewrite_keep_only_own_blocks(write_path):
+                xbmcgui.Dialog().notification(
+                    ADDON_NAME, _L(30023), xbmcgui.NOTIFICATION_INFO, 4000)
+        except apo_writer.ApoWriteError as e:
+            _error("No se pudo reescribir config.txt: %s" % e)
+            return False
 
     return True
 
@@ -157,8 +148,8 @@ def _check_prerequisites():
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "pick_device":
         _pick_device()
-    elif len(sys.argv) > 1 and sys.argv[1] == "install_keymap":
-        _install_keymap(force=True)
+    elif len(sys.argv) > 1 and sys.argv[1] == "pick_hotkey":
+        _pick_hotkey()
     elif _check_prerequisites():
         _install_keymap(force=False)
         try:

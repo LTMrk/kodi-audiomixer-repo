@@ -59,9 +59,17 @@ msgid "Keep existing config.txt content"
 msgstr "Keep existing config.txt content"
 
 msgctxt "#30020"
-msgid "Install/reinstall keyboard shortcut (F9)"
-msgstr "Install/reinstall keyboard shortcut (F9)"
+msgid "Current hotkey"
+msgstr "Current hotkey"
 
 msgctxt "#30021"
-msgid "Keyboard shortcut installed: press F9 on any screen (including video) to open the mixer. If it doesn't work right away, restart Kodi."
-msgstr "Keyboard shortcut installed: press F9 on any screen (including video) to open the mixer. If it doesn't work right away, restart Kodi."
+msgid "Keyboard shortcut installed: press that key on any screen (including video) to open the mixer. If it doesn't work right away, restart Kodi."
+msgstr "Keyboard shortcut installed: press that key on any screen (including video) to open the mixer. If it doesn't work right away, restart Kodi."
+
+msgctxt "#30022"
+msgid "Choose hotkey..."
+msgstr "Choose hotkey..."
+
+msgctxt "#30023"
+msgid "config.txt rewritten: only the addon's own block was kept."
+msgstr "config.txt rewritten: only the addon's own block was kept."

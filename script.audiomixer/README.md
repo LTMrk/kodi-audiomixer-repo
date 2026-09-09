@@ -27,7 +27,8 @@ Requisitos previos (fuera del addon):
 - **Refleja el estado real del archivo al abrir**: en vez de arrancar siempre en los valores por
   defecto, lee el bloque ya guardado en `config.txt` para el dispositivo elegido (si existe) y
   coloca los sliders donde realmente estan aplicados ahora mismo.
-- **Atajo de teclado (F9)**: se instala solo la primera vez que abres el addon. Pulsando F9 en
+- **Atajo de teclado configurable** (F9 por defecto, elegible entre F2-F12 en Ajustes): se
+  instala solo la primera vez que abres el addon, o al cambiar de tecla. Pulsandolo en
   cualquier pantalla, incluida la reproduccion de video a pantalla completa, se abre el
   mezclador directamente — no hace falta pasar por el menu contextual.
 
@@ -73,19 +74,22 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   con como Equalizer APO ve tu dispositivo (revisa el nombre real en tu `config.txt`, en la
   linea `Device:` que Equalizer APO anade automaticamente al arrancar).
 - **Conservar configuracion existente en config.txt** (activado por defecto): con esto activado,
-  el addon nunca toca nada de `config.txt` salvo su propio bloque marcado. Si lo desactivas, y
-  la opcion A (escritura directa) esta funcionando, tambien se permite limpiar una linea
-  `Include:` propia que hubiera quedado de una sesion anterior en modo B y ya no sirva de nada.
-  Nunca toca ninguna otra configuracion (Peace GUI, etc.).
-- **Instalar/reinstalar atajo de teclado (F9)**: repite la instalacion del atajo si lo has
-  borrado, quieres forzar una recarga, o simplemente quieres confirmar que sigue ahi.
+  el addon nunca toca nada de `config.txt` salvo su propio bloque marcado.
+  **Si lo desactivas** (y la opcion A -- escritura directa -- esta funcionando), cada vez que
+  abras el addon **reescribe config.txt entero**, dejando solo los bloques propios del addon
+  (de todos los dispositivos que tengas configurados) y descartando cualquier otra cosa que
+  hubiera ahi -- incluido `Include: peace.txt` si usas Peace GUI. Usalo solo si quieres que
+  `config.txt` sea de uso exclusivo de este addon.
+- **Tecla rapida actual / Elegir tecla rapida...**: muestra la tecla activa (F9 por defecto) y
+  deja elegir otra de F2 a F12. Al cambiarla se reinstala el atajo automaticamente.
 
 ## Uso
 
-- Pulsa **F9** en cualquier pantalla (incluida la reproduccion de video a pantalla completa)
-  para abrir el mezclador directamente. También puedes abrirlo desde **Complementos >
-  Complementos de programa > Audio Channel Mixer**, o desde el menu contextual del reproductor
-  (tecla `C`, o clic derecho) si te funciona en tu configuracion.
+- Pulsa tu **tecla rapida** (F9 por defecto, configurable en Ajustes) en cualquier pantalla
+  (incluida la reproduccion de video a pantalla completa) para abrir el mezclador directamente.
+  También puedes abrirlo desde **Complementos > Complementos de programa > Audio Channel
+  Mixer**, o desde el menu contextual del reproductor (tecla `C`, o clic derecho) si te
+  funciona en tu configuracion.
 - **Arriba/Abajo** mueve el foco entre los sliders (y llega a los botones en los extremos).
   **Izquierda/Derecha** sube o baja el porcentaje del slider con foco, en pasos del 2%.
 - Con **raton**, haz clic en cualquier punto de la barra de un slider para poner el valor
@@ -101,10 +105,12 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   (opcion A); solo si eso falla cae al archivo propio en `addon_data` (opcion B) para esa
   sesion. El titulo de la ventana indica `[archivo de respaldo, revisa Include:]` cuando esta
   en modo B.
-- En cualquiera de los dos archivos, el addon nunca borra nada que no sea suyo: cada
-  dispositivo (o el global, si no eliges ninguno) tiene su propio bloque marcado
+- Con **"Conservar configuracion existente"** activado (por defecto), el addon nunca borra
+  nada que no sea suyo, en ninguno de los dos archivos: cada dispositivo (o el global, si no
+  eliges ninguno) tiene su propio bloque marcado
   `# BEGIN KODI AUDIOMIXER [clave] ... # END KODI AUDIOMIXER [clave]`, y solo se reemplaza el
-  bloque del dispositivo que estas editando.
+  bloque del dispositivo que estas editando. **Desactivado**, cada apertura del addon reescribe
+  `config.txt` dejando solo esos bloques propios (ver "Ajustes del addon" mas arriba).
 - Si ni el `config.txt` real ni el archivo de respaldo se pueden escribir, revisa permisos y
   espacio en disco.
 

@@ -77,10 +77,21 @@ def set_device_pattern(pattern):
 
 def get_keep_existing_config():
     """Si esta activado (por defecto), el addon nunca toca nada de
-    config.txt salvo su propio bloque marcado. Si se desactiva, ademas se
-    permite limpiar la linea 'Include:' propia cuando ya no hace falta
-    (opcion A funcionando) -- nunca toca nada mas (Peace GUI, etc.)."""
+    config.txt salvo su propio bloque marcado. Si se desactiva (y la
+    opcion A -- escritura directa -- esta funcionando), el addon reescribe
+    el archivo dejando solo sus propios bloques, descartando cualquier
+    otra configuracion (Peace GUI, etc.)."""
     try:
         return ADDON.getSettingBool("keep_existing_config")
     except Exception:
         return True
+
+
+def get_hotkey():
+    from . import keymap_installer
+    key = (ADDON.getSettingString("hotkey") or "").strip().lower()
+    return key or keymap_installer.DEFAULT_KEY
+
+
+def set_hotkey(key):
+    ADDON.setSettingString("hotkey", key)

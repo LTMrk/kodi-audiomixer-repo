@@ -59,9 +59,17 @@ msgid "Conservar configuracion existente en config.txt"
 msgstr "Conservar configuracion existente en config.txt"
 
 msgctxt "#30020"
-msgid "Instalar/reinstalar atajo de teclado (F9)"
-msgstr "Instalar/reinstalar atajo de teclado (F9)"
+msgid "Tecla rapida actual"
+msgstr "Tecla rapida actual"
 
 msgctxt "#30021"
-msgid "Atajo de teclado instalado: pulsa F9 en cualquier pantalla (incluido el video) para abrir el mezclador. Si no funciona a la primera, reinicia Kodi."
-msgstr "Atajo de teclado instalado: pulsa F9 en cualquier pantalla (incluido el video) para abrir el mezclador. Si no funciona a la primera, reinicia Kodi."
+msgid "Atajo de teclado instalado: pulsa esa tecla en cualquier pantalla (incluido el video) para abrir el mezclador. Si no funciona a la primera, reinicia Kodi."
+msgstr "Atajo de teclado instalado: pulsa esa tecla en cualquier pantalla (incluido el video) para abrir el mezclador. Si no funciona a la primera, reinicia Kodi."
+
+msgctxt "#30022"
+msgid "Elegir tecla rapida..."
+msgstr "Elegir tecla rapida..."
+
+msgctxt "#30023"
+msgid "config.txt reescrito: solo se ha dejado el bloque del addon."
+msgstr "config.txt reescrito: solo se ha dejado el bloque del addon."

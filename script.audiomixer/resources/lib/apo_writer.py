@@ -139,3 +139,33 @@ def write_block(path, key, body_lines):
             f.write("\n".join(new_lines) + "\n")
     except (IOError, OSError) as e:
         raise ApoWriteError(str(e))
+
+
+def rewrite_keep_only_own_blocks(path):
+    """Reescribe el archivo dejando SOLO los bloques propios ya existentes
+    (# BEGIN/END KODI AUDIOMIXER [...]), descartando cualquier otra linea
+    (Include:/Device:/Channel: de otras herramientas, comentarios, etc.).
+    Se usa solo cuando el usuario desactiva explicitamente "conservar
+    configuracion existente". Lanza ApoFormatError si el archivo tiene
+    marcas mal formadas (no se toca nada en ese caso). Devuelve True si el
+    contenido ha cambiado, False si ya estaba asi."""
+    lines = _read_lines(path)
+    blocks, problems = scan_blocks(lines)
+    if problems:
+        raise ApoFormatError("; ".join(problems))
+
+    new_lines = []
+    for start, end in sorted(blocks.values()):
+        if new_lines:
+            new_lines.append("")
+        new_lines.extend(lines[start:end + 1])
+
+    if new_lines == lines:
+        return False
+
+    try:
+        with io.open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(new_lines) + "\n" if new_lines else "")
+    except (IOError, OSError) as e:
+        raise ApoWriteError(str(e))
+    return True
