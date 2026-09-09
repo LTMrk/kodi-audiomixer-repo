@@ -18,7 +18,26 @@ def _log(msg):
     xbmc.log("%s %s" % (LOG_TAG, msg), xbmc.LOGINFO)
 
 # --- geometria del panel (coordenadas de skin, base 1280x720) ---
-PX, PY, PW, PH = 260, 110, 760, 500
+PX, PY, PW, PH = 260, 110, 760, 540
+
+# Vumetro L/R (salida real, ver resources/lib/vu_meter.py): dos barras
+# horizontales apiladas justo debajo del titulo, antes de las cabeceras/
+# sliders. CONTENT_TOP_OFFSET desplaza hacia abajo el arranque de las
+# filas de sliders (antes empezaban justo debajo del titulo) para dejarles
+# hueco encima sin tocar el resto de la geometria.
+METER_LABEL_W = 30
+METER_TRACK_H = 14
+METER_ROW_GAP = 6
+METER_L_Y = PY + 58  # debajo del boton de modo (que ocupa hasta PY+10+40=PY+50)
+METER_R_Y = METER_L_Y + METER_TRACK_H + METER_ROW_GAP
+METER_TRACK_X = PX + 30 + METER_LABEL_W + 10
+METER_TRACK_W = PX + PW - 30 - METER_TRACK_X
+CONTENT_TOP_OFFSET = 40
+METER_THRESHOLD_YELLOW = 0.7
+METER_THRESHOLD_RED = 0.9
+METER_COLOR_LOW = "0xFF33CC66"
+METER_COLOR_MID = "0xFFDDCC33"
+METER_COLOR_HIGH = "0xFFDD4433"
 
 # xbmcgui.ControlSlider se ha demostrado poco fiable en este build de Kodi:
 # el "nib" no respeta el tamano real de sus texturas (se renderiza enorme y
@@ -60,6 +79,19 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.nib_images = {}     # key -> ControlImage (tirador, dibujado a mano)
         self.value_labels = {}   # key -> ControlLabel
         self.dynamic_controls = []
+
+        # Vumetro L/R de la salida real (opcional: se apaga solo si WASAPI
+        # no esta disponible por lo que sea). Solo se construye el objeto
+        # aqui (barato); start()/stop() los gestiona run() para no dejar
+        # un hilo de captura huerfano si la construccion de la ventana
+        # falla antes de llegar a mostrarla.
+        self._vu_meter = None
+        self._meter_fills = {}
+        try:
+            from . import vu_meter
+            self._vu_meter = vu_meter.LoopbackMeter()
+        except Exception as e:
+            _log("vumetro no disponible (import): %r" % e)
 
         self._closing = False
         self._last_seen_key = None
@@ -147,6 +179,44 @@ class MixerWindow(xbmcgui.WindowDialog):
                                        self.toggle_btn, self.toggle_btn)
         self.setFocus(self.toggle_btn)
 
+        if self._vu_meter is not None:
+            self._meter_fills['L'] = self._add_meter_row("L", METER_L_Y)
+            self._meter_fills['R'] = self._add_meter_row("R", METER_R_Y)
+
+    def _add_meter_row(self, label_text, y):
+        label = xbmcgui.ControlLabel(PX + 30, y - 3, METER_LABEL_W, METER_TRACK_H + 6,
+                                      label_text, textColor="0xFFAAAAAA", font="font12")
+        track = xbmcgui.ControlImage(METER_TRACK_X, y, METER_TRACK_W, METER_TRACK_H,
+                                      os.path.join(MEDIA, "meter_track.png"))
+        fill = xbmcgui.ControlImage(METER_TRACK_X, y, 1, METER_TRACK_H,
+                                     os.path.join(MEDIA, "meter_fill.png"),
+                                     colorDiffuse=METER_COLOR_LOW)
+        self.addControl(label)
+        self.addControl(track)
+        self.addControl(fill)
+        return fill
+
+    def _refresh_meters(self):
+        if self._vu_meter is None:
+            return
+        level_l, level_r = self._vu_meter.get_levels()
+        self._set_meter_fill('L', level_l)
+        self._set_meter_fill('R', level_r)
+
+    def _set_meter_fill(self, key, level):
+        fill = self._meter_fills.get(key)
+        if fill is None:
+            return
+        level = max(0.0, min(1.0, level))
+        fill.setWidth(max(1, int(round(level * METER_TRACK_W))))
+        if level < METER_THRESHOLD_YELLOW:
+            color = METER_COLOR_LOW
+        elif level < METER_THRESHOLD_RED:
+            color = METER_COLOR_MID
+        else:
+            color = METER_COLOR_HIGH
+        fill.setColorDiffuse(color)
+
     def _clear_dynamic(self):
         for c in self.dynamic_controls:
             self.removeControl(c)
@@ -215,7 +285,7 @@ class MixerWindow(xbmcgui.WindowDialog):
     def _build_simple(self):
         order = ["lr", "center", "lfe", "surround"]
         loaded = self._loaded_percents or {}
-        start_y = PY + 90
+        start_y = PY + 90 + CONTENT_TOP_OFFSET
         row_h = 80
         btns = []
         for i, key in enumerate(order):
@@ -233,13 +303,13 @@ class MixerWindow(xbmcgui.WindowDialog):
         defaults = mx.default_advanced_percents()
         loaded = self._loaded_percents or {}
         col_defs = [("L", PX + 20, "Contribuyen a L"), ("R", PX + 400, "Contribuyen a R")]
-        start_y = PY + 90
+        start_y = PY + 90 + CONTENT_TOP_OFFSET
         row_h = 62
         order = []
         btns = []
 
         for out, col_x, header in col_defs:
-            hdr = xbmcgui.ControlLabel(col_x, PY + 60, 340, 24, header,
+            hdr = xbmcgui.ControlLabel(col_x, PY + 60 + CONTENT_TOP_OFFSET, 340, 24, header,
                                         textColor="0xFF66CCFF", font="font12_title")
             self.addControl(hdr)
             self.dynamic_controls.append(hdr)
@@ -442,13 +512,26 @@ class MixerWindow(xbmcgui.WindowDialog):
     # ---------------------------------------------------------- bucle principal
     def run(self):
         _log("run(): entrando al bucle principal")
+        if self._vu_meter is not None:
+            try:
+                self._vu_meter.start()
+            except Exception as e:
+                _log("vumetro no se pudo iniciar: %r" % e)
         self.show()
         monitor = xbmc.Monitor()
-        while not self._closing and not monitor.abortRequested():
-            self._refresh_visuals()
-            self._maybe_write()
-            if monitor.waitForAbort(0.1):
-                break
+        try:
+            while not self._closing and not monitor.abortRequested():
+                self._refresh_visuals()
+                self._refresh_meters()
+                self._maybe_write()
+                if monitor.waitForAbort(0.1):
+                    break
+        finally:
+            if self._vu_meter is not None:
+                try:
+                    self._vu_meter.stop()
+                except Exception as e:
+                    _log("error al detener el vumetro: %r" % e)
         _log("run(): saliendo del bucle (closing=%s abortRequested=%s)"
              % (self._closing, monitor.abortRequested()))
         self._force_write()

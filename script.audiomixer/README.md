@@ -31,6 +31,13 @@ Requisitos previos (fuera del addon):
   instala solo la primera vez que abres el addon, o al cambiar de tecla. Pulsandolo en
   cualquier pantalla, incluida la reproduccion de video a pantalla completa, se abre el
   mezclador directamente — no hace falta pasar por el menu contextual.
+- **Vumetro L/R en tiempo real**: dos barras (debajo del boton de modo) que muestran el nivel
+  de la salida de audio real, tal y como suena, capturada por loopback WASAPI del dispositivo
+  de reproduccion **por defecto** de Windows. Verde/amarillo/rojo segun el nivel. Si no se
+  puede capturar audio por lo que sea (formato no soportado, dispositivo ocupado, etc.) el
+  vumetro simplemente no aparece; el resto del mezclador sigue funcionando igual.
+  **Limitacion:** mide el dispositivo por defecto del sistema, no necesariamente el
+  dispositivo concreto que tengas elegido en Ajustes > Dispositivo de salida si usas varios.
 
 ## Instalacion
 
