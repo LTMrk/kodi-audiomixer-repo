@@ -14,6 +14,14 @@ MEDIA = os.path.join(settings.addon_path(), "resources", "media")
 # --- geometria del panel (coordenadas de skin, base 1280x720) ---
 PX, PY, PW, PH = 260, 110, 760, 500
 
+# xbmcgui.ControlSlider ignora el tamano real de las imagenes texture/
+# texturefocus y las estira a un tamano propio (en algunos builds de Kodi
+# eso da un "nib" enorme y pixelado en vez de un tirador pequeno). Para
+# evitarlo, el ControlSlider se usa solo para el foco/lectura de valor con
+# un texture/texturefocus transparente, y el tirador visible es una
+# ControlImage aparte que se coloca a mano segun el porcentaje actual.
+NIB_W, NIB_H = 20, 20
+
 ACTION_PREVIOUS_MENU = 10
 ACTION_NAV_BACK = 92
 
@@ -31,8 +39,10 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.device_key = (self.device_pattern.replace("[", "").replace("]", "")
                             or apo_writer.GLOBAL_KEY)
 
-        self.sliders = {}       # key -> ControlSlider
+        self.sliders = {}       # key -> ControlSlider (foco/valor, tirador invisible)
         self.value_labels = {}  # key -> ControlLabel
+        self.nib_images = {}    # key -> ControlImage (tirador visible, dibujado a mano)
+        self.track_geom = {}    # key -> (track_x, track_w, nib_y)
         self.dynamic_controls = []
 
         self._closing = False
@@ -116,6 +126,12 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.dynamic_controls = []
         self.sliders = {}
         self.value_labels = {}
+        self.nib_images = {}
+        self.track_geom = {}
+
+    @staticmethod
+    def _nib_x(track_x, track_w, percent):
+        return track_x + int(round((track_w - NIB_W) * (percent / 100.0)))
 
     def _build_mode(self, mode):
         self._clear_dynamic()
@@ -137,20 +153,30 @@ class MixerWindow(xbmcgui.WindowDialog):
         for i, key in enumerate(order):
             y = start_y + i * row_h
             percent = loaded.get(key, 50)
+            track_x, track_y, track_w, track_h = PX + 340, y + 4, 340, 22
+            nib_y = track_y + (track_h - NIB_H) // 2
             label = xbmcgui.ControlLabel(PX + 30, y, 300, 30,
                                           mx.SIMPLE_LABELS[key],
                                           textColor="0xFFFFFFFF", font="font12")
             slider = xbmcgui.ControlSlider(
-                PX + 340, y + 4, 340, 22,
-                textureback=os.path.join(MEDIA, "slider_bg.png"))
+                track_x, track_y, track_w, track_h,
+                textureback=os.path.join(MEDIA, "slider_bg.png"),
+                texture=os.path.join(MEDIA, "transparent.png"),
+                texturefocus=os.path.join(MEDIA, "transparent.png"))
+            nib_img = xbmcgui.ControlImage(
+                self._nib_x(track_x, track_w, percent), nib_y, NIB_W, NIB_H,
+                os.path.join(MEDIA, "slider_nib.png"))
             value_lbl = xbmcgui.ControlLabel(PX + 700, y, 50, 30, "%d%%" % percent,
                                               textColor="0xFFAAAAAA", font="font12")
             self.addControl(label)
             self.addControl(slider)
+            self.addControl(nib_img)
             self.addControl(value_lbl)
             slider.setPercent(percent)
-            self.dynamic_controls += [label, slider, value_lbl]
+            self.dynamic_controls += [label, slider, nib_img, value_lbl]
             self.sliders[key] = slider
+            self.nib_images[key] = nib_img
+            self.track_geom[key] = (track_x, track_w, nib_y)
             self.value_labels[key] = value_lbl
 
         self._wire_navigation(order)
@@ -173,22 +199,32 @@ class MixerWindow(xbmcgui.WindowDialog):
             for i, ch in enumerate(mx.CHANNELS):
                 y = start_y + i * row_h
                 key = (out, ch)
+                track_x, track_y, track_w, track_h = col_x + 95, y + 3, 190, 20
+                nib_y = track_y + (track_h - NIB_H) // 2
                 lbl_text = mx.ADVANCED_LABELS[key]
                 label = xbmcgui.ControlLabel(col_x, y, 90, 26, lbl_text,
                                               textColor="0xFFFFFFFF", font="font12")
                 slider = xbmcgui.ControlSlider(
-                    col_x + 95, y + 3, 190, 20,
-                    textureback=os.path.join(MEDIA, "slider_bg.png"))
+                    track_x, track_y, track_w, track_h,
+                    textureback=os.path.join(MEDIA, "slider_bg.png"),
+                    texture=os.path.join(MEDIA, "transparent.png"),
+                    texturefocus=os.path.join(MEDIA, "transparent.png"))
                 percent = loaded.get(key, defaults[key])
+                nib_img = xbmcgui.ControlImage(
+                    self._nib_x(track_x, track_w, percent), nib_y, NIB_W, NIB_H,
+                    os.path.join(MEDIA, "slider_nib.png"))
                 value_lbl = xbmcgui.ControlLabel(col_x + 292, y, 45, 26,
                                                   "%d%%" % percent,
                                                   textColor="0xFFAAAAAA", font="font12")
                 self.addControl(label)
                 self.addControl(slider)
+                self.addControl(nib_img)
                 self.addControl(value_lbl)
                 slider.setPercent(percent)
-                self.dynamic_controls += [label, slider, value_lbl]
+                self.dynamic_controls += [label, slider, nib_img, value_lbl]
                 self.sliders[key] = slider
+                self.nib_images[key] = nib_img
+                self.track_geom[key] = (track_x, track_w, nib_y)
                 self.value_labels[key] = value_lbl
                 order.append(key)
 
@@ -223,7 +259,10 @@ class MixerWindow(xbmcgui.WindowDialog):
 
     def _refresh_value_labels(self):
         for key, slider in self.sliders.items():
-            self.value_labels[key].setLabel("%d%%" % slider.getPercent())
+            percent = slider.getPercent()
+            self.value_labels[key].setLabel("%d%%" % percent)
+            track_x, track_w, nib_y = self.track_geom[key]
+            self.nib_images[key].setPosition(self._nib_x(track_x, track_w, percent), nib_y)
 
     def _compute_copy_line(self):
         percents = {k: s.getPercent() for k, s in self.sliders.items()}
