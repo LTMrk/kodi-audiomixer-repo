@@ -11,6 +11,12 @@ from . import addon_settings as settings
 
 MEDIA = os.path.join(settings.addon_path(), "resources", "media")
 
+LOG_TAG = "[script.audiomixer]"
+
+
+def _log(msg):
+    xbmc.log("%s %s" % (LOG_TAG, msg), xbmc.LOGINFO)
+
 # --- geometria del panel (coordenadas de skin, base 1280x720) ---
 PX, PY, PW, PH = 260, 110, 760, 500
 
@@ -22,6 +28,8 @@ PX, PY, PW, PH = 260, 110, 760, 500
 # ControlImage aparte que se coloca a mano segun el porcentaje actual.
 NIB_W, NIB_H = 20, 20
 
+ACTION_MOVE_LEFT = 1
+ACTION_MOVE_RIGHT = 2
 ACTION_PREVIOUS_MENU = 10
 ACTION_NAV_BACK = 92
 
@@ -38,6 +46,7 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.device_pattern = settings.get_device_pattern()
         self.device_key = (self.device_pattern.replace("[", "").replace("]", "")
                             or apo_writer.GLOBAL_KEY)
+        _log("init: config_path=%r device_key=%r" % (self.config_path, self.device_key))
 
         self.sliders = {}       # key -> ControlSlider (foco/valor, tirador invisible)
         self.value_labels = {}  # key -> ControlLabel
@@ -55,6 +64,7 @@ class MixerWindow(xbmcgui.WindowDialog):
         # por defecto. La validez del formato del archivo ya la comprobo
         # main.py antes de crear esta ventana.
         self.mode, self._loaded_percents = self._load_existing_state()
+        _log("estado cargado: mode=%r loaded_percents=%r" % (self.mode, self._loaded_percents))
 
         self._build_static()
         self._build_mode(self.mode)
@@ -118,6 +128,8 @@ class MixerWindow(xbmcgui.WindowDialog):
             font="font12")
         self.addControl(self.close_btn)
         self.close_btn_id = self.close_btn.getId()
+        _log("botones creados: toggle_btn_id=%s close_btn_id=%s"
+             % (self.toggle_btn_id, self.close_btn_id))
 
         self.setFocus(self.toggle_btn)
 
@@ -245,10 +257,14 @@ class MixerWindow(xbmcgui.WindowDialog):
 
     # ---------------------------------------------------------- eventos
     def onAction(self, action):
-        if action.getId() in (ACTION_PREVIOUS_MENU, ACTION_NAV_BACK):
+        action_id = action.getId()
+        if action_id not in (ACTION_MOVE_LEFT, ACTION_MOVE_RIGHT):
+            _log("onAction id=%s" % action_id)
+        if action_id in (ACTION_PREVIOUS_MENU, ACTION_NAV_BACK):
             self._closing = True
 
     def _toggle_mode(self):
+        _log("_toggle_mode: %s -> %s" % (self.mode, "advanced" if self.mode == "simple" else "simple"))
         self._build_mode("advanced" if self.mode == "simple" else "simple")
 
     def onControl(self, control):
@@ -256,12 +272,15 @@ class MixerWindow(xbmcgui.WindowDialog):
         # mensaje por si mismo"; para ControlButton el evento normalmente
         # llega por onClick(controlId) en su lugar. Se dejan los dos
         # manejadores por seguridad, cada uno cubre casos distintos.
+        _log("onControl control=%r" % control)
         if control == self.close_btn:
             self._closing = True
         elif control == self.toggle_btn:
             self._toggle_mode()
 
     def onClick(self, controlId):
+        _log("onClick controlId=%s (close_btn_id=%s toggle_btn_id=%s)"
+             % (controlId, self.close_btn_id, self.toggle_btn_id))
         if controlId == self.close_btn_id:
             self._closing = True
         elif controlId == self.toggle_btn_id:
@@ -299,18 +318,26 @@ class MixerWindow(xbmcgui.WindowDialog):
             if self.device_pattern:
                 body.append("Device: %s" % self.device_pattern)
             body.append(copy_line)
+            _log("escribiendo bloque device_key=%r en %r: %r"
+                 % (self.device_key, self.config_path, body))
             try:
                 apo_writer.write_block(self.config_path, self.device_key, body)
+                _log("escritura OK")
             except apo_writer.ApoFormatError as e:
+                _log("ApoFormatError al escribir: %s" % e)
                 xbmcgui.Dialog().notification(
                     "Audio Channel Mixer",
                     "config.txt mal formado, no se ha escrito: %s" % e,
                     xbmcgui.NOTIFICATION_ERROR, 5000)
             except apo_writer.ApoWriteError as e:
+                _log("ApoWriteError al escribir: %s" % e)
                 xbmcgui.Dialog().notification(
                     "Audio Channel Mixer",
                     "No se pudo escribir config.txt: %s" % e,
                     xbmcgui.NOTIFICATION_ERROR, 4000)
+            except Exception as e:
+                _log("EXCEPCION NO ESPERADA al escribir: %r" % e)
+                raise
             self._last_written_key = state_key
             self._pending = False
 
@@ -324,6 +351,7 @@ class MixerWindow(xbmcgui.WindowDialog):
 
     # ---------------------------------------------------------- bucle principal
     def run(self):
+        _log("run(): entrando al bucle principal")
         self.show()
         monitor = xbmc.Monitor()
         while not self._closing and not monitor.abortRequested():
@@ -331,5 +359,7 @@ class MixerWindow(xbmcgui.WindowDialog):
             self._maybe_write()
             if monitor.waitForAbort(0.1):
                 break
+        _log("run(): saliendo del bucle (closing=%s abortRequested=%s)"
+             % (self._closing, monitor.abortRequested()))
         self._force_write()
         self.close()
