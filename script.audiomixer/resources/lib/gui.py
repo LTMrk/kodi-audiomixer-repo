@@ -103,12 +103,12 @@ class MixerWindow(xbmcgui.WindowDialog):
                 textureback=os.path.join(MEDIA, "slider_bg.png"),
                 texture=os.path.join(MEDIA, "slider_nib.png"),
                 texturefocus=os.path.join(MEDIA, "slider_nib_focus.png"))
-            slider.setPercent(50)
             value_lbl = xbmcgui.ControlLabel(PX + 700, y, 50, 30, "50%",
                                               textColor="0xFFAAAAAA", font="font12")
             self.addControl(label)
             self.addControl(slider)
             self.addControl(value_lbl)
+            slider.setPercent(50)
             self.dynamic_controls += [label, slider, value_lbl]
             self.sliders[key] = slider
             self.value_labels[key] = value_lbl
@@ -141,13 +141,13 @@ class MixerWindow(xbmcgui.WindowDialog):
                     texture=os.path.join(MEDIA, "slider_nib.png"),
                     texturefocus=os.path.join(MEDIA, "slider_nib_focus.png"))
                 percent = defaults[key]
-                slider.setPercent(percent)
                 value_lbl = xbmcgui.ControlLabel(col_x + 292, y, 45, 26,
                                                   "%d%%" % percent,
                                                   textColor="0xFFAAAAAA", font="font12")
                 self.addControl(label)
                 self.addControl(slider)
                 self.addControl(value_lbl)
+                slider.setPercent(percent)
                 self.dynamic_controls += [label, slider, value_lbl]
                 self.sliders[key] = slider
                 self.value_labels[key] = value_lbl
