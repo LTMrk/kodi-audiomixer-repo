@@ -32,6 +32,7 @@ ACTION_MOVE_LEFT = 1
 ACTION_MOVE_RIGHT = 2
 ACTION_PREVIOUS_MENU = 10
 ACTION_NAV_BACK = 92
+ACTION_MOUSE_LEFT_CLICK = 100
 
 ID_CLOSE = 9001
 ID_TOGGLE = 9002
@@ -262,6 +263,15 @@ class MixerWindow(xbmcgui.WindowDialog):
             _log("onAction id=%s" % action_id)
         if action_id in (ACTION_PREVIOUS_MENU, ACTION_NAV_BACK):
             self._closing = True
+        elif action_id == ACTION_MOUSE_LEFT_CLICK:
+            # Con raton, onClick/onControl no se estan disparando para los
+            # botones de esta ventana (solo llega el ACTION_MOUSE_LEFT_CLICK
+            # crudo). En vez de calcular a mano coordenadas de pantalla,
+            # se usa el control que Kodi ya tiene enfocado (el hover del
+            # raton lo mueve el foco) y se reutiliza onClick con ese id.
+            focus_id = self.getFocusId()
+            _log("click de raton, control con foco=%s" % focus_id)
+            self.onClick(focus_id)
 
     def _toggle_mode(self):
         _log("_toggle_mode: %s -> %s" % (self.mode, "advanced" if self.mode == "simple" else "simple"))

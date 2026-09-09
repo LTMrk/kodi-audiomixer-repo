@@ -16,9 +16,9 @@ def get_debounce_ms():
 
 
 def get_default_mode():
-    # 0 = Simple, 1 = Avanzado
+    # labelenum guarda el texto elegido ("Simple"/"Avanzado"), no un indice.
     try:
-        return "advanced" if ADDON.getSettingInt("default_mode") == 1 else "simple"
+        return "advanced" if ADDON.getSettingString("default_mode") == "Avanzado" else "simple"
     except Exception:
         return "simple"
 
