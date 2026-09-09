@@ -58,15 +58,26 @@ def _install_keymap(force):
 
 
 def _pick_hotkey():
-    """Deja elegir la tecla rapida entre las disponibles y reinstala el
-    keymap con ella. Invocado desde Ajustes."""
+    """Deja elegir la tecla rapida entre las disponibles, o introducir un
+    codigo numerico obc- (para botones de mandos/dongles sin tecla
+    estandar, visible en el log como 'obc-NNNNN'), y reinstala el keymap
+    con ella. Invocado desde Ajustes."""
     keys = keymap_installer.AVAILABLE_KEYS
     current = settings.get_hotkey()
     labels = [k.upper() + ("  (actual)" if k == current else "") for k in keys]
+    labels.append(_L(30024))  # "Otra (codigo numerico obc-...)..."
     idx = xbmcgui.Dialog().select(_L(30022), labels)
     if idx < 0:
         return
-    settings.set_hotkey(keys[idx])
+    if idx == len(keys):
+        code = xbmcgui.Dialog().input(_L(30025), defaultt=current if current.isdigit() else "",
+                                       type=xbmcgui.INPUT_NUMERIC)
+        if not code:
+            return
+        chosen = code
+    else:
+        chosen = keys[idx]
+    settings.set_hotkey(chosen)
     _install_keymap(force=True)
 
 

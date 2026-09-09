@@ -81,7 +81,12 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   hubiera ahi -- incluido `Include: peace.txt` si usas Peace GUI. Usalo solo si quieres que
   `config.txt` sea de uso exclusivo de este addon.
 - **Tecla rapida actual / Elegir tecla rapida...**: muestra la tecla activa (F9 por defecto) y
-  deja elegir otra de F2 a F12. Al cambiarla se reinstala el atajo automaticamente.
+  deja elegir otra de F2 a F12, o **"Otra (codigo numerico obc-...)..."** para usar un boton de
+  un mando/dongle USB que no tenga tecla estandar. Para averiguar su codigo: activa
+  **Ajustes > Sistema > Registros > Activar registro de depuracion**, pulsa el boton una vez
+  y busca en el Log Viewer la linea `CInputManager::HandleKey: ... (0x.., obc-NNNNN) pressed`
+  -- el numero tras `obc-` es el codigo a introducir. Al cambiar de tecla se reinstala el
+  atajo automaticamente.
 
 ## Uso
 

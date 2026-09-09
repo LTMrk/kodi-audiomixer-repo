@@ -407,6 +407,7 @@ class MixerWindow(xbmcgui.WindowDialog):
             body = ["# MODE: %s" % self.mode]
             if self.device_pattern:
                 body.append("Device: %s" % self.device_pattern)
+            body.append("Channel: all")
             body.append(copy_line)
             _log("escribiendo bloque device_key=%r en %r: %r"
                  % (self.device_key, self.write_path, body))

@@ -73,3 +73,11 @@ msgstr "Choose hotkey..."
 msgctxt "#30023"
 msgid "config.txt rewritten: only the addon's own block was kept."
 msgstr "config.txt rewritten: only the addon's own block was kept."
+
+msgctxt "#30024"
+msgid "Other (numeric obc- code)..."
+msgstr "Other (numeric obc- code)..."
+
+msgctxt "#30025"
+msgid "Button's numeric code (enable debug logging, press the button, look for 'obc-NNNNN' in Kodi's log)"
+msgstr "Button's numeric code (enable debug logging, press the button, look for 'obc-NNNNN' in Kodi's log)"

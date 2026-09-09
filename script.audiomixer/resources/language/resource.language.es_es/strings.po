@@ -73,3 +73,11 @@ msgstr "Elegir tecla rapida..."
 msgctxt "#30023"
 msgid "config.txt reescrito: solo se ha dejado el bloque del addon."
 msgstr "config.txt reescrito: solo se ha dejado el bloque del addon."
+
+msgctxt "#30024"
+msgid "Otra (codigo numerico obc-...)..."
+msgstr "Otra (codigo numerico obc-...)..."
+
+msgctxt "#30025"
+msgid "Codigo numerico del boton (activa el registro de depuracion, pulsa el boton y busca 'obc-NNNNN' en el log de Kodi)"
+msgstr "Codigo numerico del boton (activa el registro de depuracion, pulsa el boton y busca 'obc-NNNNN' en el log de Kodi)"
