@@ -12,7 +12,7 @@ Requisitos previos (fuera del addon):
 ## Que hace
 
 - Modo **Simple** (4 controles): Frontales L/R, Central, LFE, Surround (SL/SR juntos).
-- Modo **Avanzado** (12 controles): la contribucion de cada uno de los 6 canales de origen a la salida L, y por separado a la salida R.
+- Modo **Avanzado** (12 controles): la contribucion de cada uno de los 6 canales de origen a la salida L, y por separado a la salida R. Panel ampliado y pistas mas grandes que antes, para que sean faciles de acertar con mando (D-pad o air-mouse).
 - Escribe automaticamente (con un pequeno retardo) la linea `Copy:` correspondiente,
   preferentemente **directamente en tu `config.txt` real** de Equalizer APO. Solo si eso
   falla (algunos sistemas restringen la escritura en `C:\Program Files\...` de forma poco

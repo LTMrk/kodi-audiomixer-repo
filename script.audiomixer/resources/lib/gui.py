@@ -18,7 +18,12 @@ def _log(msg):
     xbmc.log("%s %s" % (LOG_TAG, msg), xbmc.LOGINFO)
 
 # --- geometria del panel (coordenadas de skin, base 1280x720) ---
-PX, PY, PW, PH = 260, 110, 760, 540
+# PW ampliado (antes 760): las pistas de los sliders del modo Avanzado eran
+# casi la mitad de anchas que las del modo Simple (190px vs 340px) con
+# filas mas apretadas -- objetivos dificiles de acertar con un mando
+# (D-pad o air-mouse a distancia). Se aprovecha el ancho extra para hacer
+# las 12 pistas de Avanzado notablemente mas grandes (ver _build_advanced).
+PX, PY, PW, PH = 190, 110, 900, 540
 
 # Vumetro L/R (salida real, ver resources/lib/vu_meter.py): dos barras
 # horizontales apiladas justo debajo del titulo, antes de las cabeceras/
@@ -293,7 +298,7 @@ class MixerWindow(xbmcgui.WindowDialog):
             percent = loaded.get(key, 50)
             btn = self._add_slider_row(
                 key, PX + 30, 300, mx.SIMPLE_LABELS[key],
-                PX + 340, y + 4, 340, 22, PX + 700, 50, percent)
+                PX + 340, y + 4, 480, 22, PX + 840, 50, percent)
             btns.append(btn)
 
         self._wire_navigation(order, btns)
@@ -302,7 +307,7 @@ class MixerWindow(xbmcgui.WindowDialog):
     def _build_advanced(self):
         defaults = mx.default_advanced_percents()
         loaded = self._loaded_percents or {}
-        col_defs = [("L", PX + 20, "Contribuyen a L"), ("R", PX + 400, "Contribuyen a R")]
+        col_defs = [("L", PX + 20, "Contribuyen a L"), ("R", PX + 460, "Contribuyen a R")]
         start_y = PY + 90 + CONTENT_TOP_OFFSET
         row_h = 62
         order = []
@@ -320,7 +325,7 @@ class MixerWindow(xbmcgui.WindowDialog):
                 percent = loaded.get(key, defaults[key])
                 btn = self._add_slider_row(
                     key, col_x, 90, mx.ADVANCED_LABELS[key],
-                    col_x + 95, y + 3, 190, 20, col_x + 292, 45, percent)
+                    col_x + 95, y + 3, 272, 24, col_x + 375, 45, percent)
                 order.append(key)
                 btns.append(btn)
 
