@@ -19,11 +19,13 @@ AVAILABLE_KEYS = ["f2", "f3", "f4", "f5", "f6", "f7", "f8",
 
 # Botones sin nombre de tecla estandar (mandos/dongles USB "air mouse",
 # mandos a distancia con teclas multimedia, etc.) aparecen en el log como
-# "Keyboard: scancode: 0x.. ..." seguido de un
-# "CInputManager::HandleKey: ... (0x.., obc-NNNNN) pressed ... action is"
-# -- ese NNNNN (el numero tras "obc-") se puede usar directamente como
-# "tecla" aqui: se detecta por ser puramente numerico y se genera
-# <key id="NNNNN"> en vez de una etiqueta con nombre.
+# "CInputManager::HandleKey: ... (0xXXXX, obc-NNNNN) pressed ... action is"
+# -- el valor DECIMAL del hexadecimal entre parentesis (0xXXXX, NO el
+# "obc-NNNNN", que es solo un numero informativo derivado de forma poco
+# fiable para scancodes grandes, ver github.com/xbmc/xbmc/issues/16834) es
+# lo que hay que usar aqui como "tecla": se detecta por ser puramente
+# numerico y se genera <key id="N"> en vez de una etiqueta con nombre.
+# main.py._pick_hotkey() ya hace esa conversion hex->decimal por el usuario.
 KEYMAP_TEMPLATE_NAMED = """<keymap>
     <global>
         <keyboard>
@@ -65,8 +67,9 @@ def is_installed():
 def install(key, force=False):
     """Instala (o reinstala si force=True, o si la tecla actual del
     archivo no coincide con 'key') el keymap con esa tecla (nombre como
-    "f9", o un codigo numerico obc- para botones sin tecla estandar).
-    Devuelve True si se ha escrito el archivo en esta llamada."""
+    "f9", o el codigo decimal de un boton sin tecla estandar -- ver
+    main.py._pick_hotkey()). Devuelve True si se ha escrito el archivo en
+    esta llamada."""
     path = keymap_path()
     xml = _keymap_xml(key)
     if not force and os.path.isfile(path):

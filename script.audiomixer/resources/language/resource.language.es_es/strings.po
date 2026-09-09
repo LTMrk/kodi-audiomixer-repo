@@ -75,9 +75,13 @@ msgid "config.txt reescrito: solo se ha dejado el bloque del addon."
 msgstr "config.txt reescrito: solo se ha dejado el bloque del addon."
 
 msgctxt "#30024"
-msgid "Otra (codigo numerico obc-...)..."
-msgstr "Otra (codigo numerico obc-...)..."
+msgid "Otra (codigo hexadecimal)..."
+msgstr "Otra (codigo hexadecimal)..."
 
 msgctxt "#30025"
-msgid "Codigo numerico del boton (activa el registro de depuracion, pulsa el boton y busca 'obc-NNNNN' en el log de Kodi)"
-msgstr "Codigo numerico del boton (activa el registro de depuracion, pulsa el boton y busca 'obc-NNNNN' en el log de Kodi)"
+msgid "Codigo hexadecimal del boton: activa el registro de depuracion, pulsa el boton y busca en el log una linea como '... (0xXXXX, obc-NNNNN) pressed...'. Escribe aqui el 0xXXXX (con o sin '0x'); el numero obc-NNNNN NO sirve, es solo informativo."
+msgstr "Codigo hexadecimal del boton: activa el registro de depuracion, pulsa el boton y busca en el log una linea como '... (0xXXXX, obc-NNNNN) pressed...'. Escribe aqui el 0xXXXX (con o sin '0x'); el numero obc-NNNNN NO sirve, es solo informativo."
+
+msgctxt "#30026"
+msgid "Codigo hexadecimal no valido."
+msgstr "Codigo hexadecimal no valido."

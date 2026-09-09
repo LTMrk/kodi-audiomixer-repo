@@ -81,12 +81,18 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   hubiera ahi -- incluido `Include: peace.txt` si usas Peace GUI. Usalo solo si quieres que
   `config.txt` sea de uso exclusivo de este addon.
 - **Tecla rapida actual / Elegir tecla rapida...**: muestra la tecla activa (F9 por defecto) y
-  deja elegir otra de F2 a F12, o **"Otra (codigo numerico obc-...)..."** para usar un boton de
-  un mando/dongle USB que no tenga tecla estandar. Para averiguar su codigo: activa
+  deja elegir otra de F2 a F12, o **"Otra (codigo hexadecimal)..."** para usar un boton de un
+  mando/dongle USB que no tenga tecla estandar. Para averiguar su codigo: activa
   **Ajustes > Sistema > Registros > Activar registro de depuracion**, pulsa el boton una vez
-  y busca en el Log Viewer la linea `CInputManager::HandleKey: ... (0x.., obc-NNNNN) pressed`
-  -- el numero tras `obc-` es el codigo a introducir. Al cambiar de tecla se reinstala el
-  atajo automaticamente.
+  y busca en el Log Viewer la linea `CInputManager::HandleKey: ... (0xXXXX, obc-NNNNN) pressed`
+  -- el codigo a introducir es el **hexadecimal entre parentesis** (`0xXXXX`, con o sin el
+  `0x`). **El numero `obc-NNNNN` no sirve**: es un valor solo informativo que Kodi calcula mal
+  para botones con un scancode grande (bug conocido, ver
+  [xbmc/xbmc#16834](https://github.com/xbmc/xbmc/issues/16834)); usarlo directamente no llega
+  a emparejar la tecla. Al cambiar de tecla se reinstala el atajo automaticamente.
+  Ojo: si tu mando es un "air mouse" tipo **MX3** (muy comun), los 4 botones de colores son
+  **solo IR** (no mandan nada por el dongle 2.4G) y no sirven para esto; usa otro boton que sí
+  se vea reflejado en el log al pulsarlo.
 
 ## Uso
 

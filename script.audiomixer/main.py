@@ -58,23 +58,36 @@ def _install_keymap(force):
 
 
 def _pick_hotkey():
-    """Deja elegir la tecla rapida entre las disponibles, o introducir un
-    codigo numerico obc- (para botones de mandos/dongles sin tecla
-    estandar, visible en el log como 'obc-NNNNN'), y reinstala el keymap
-    con ella. Invocado desde Ajustes."""
+    """Deja elegir la tecla rapida entre las disponibles, o introducir el
+    codigo hexadecimal que Kodi muestra entre parentesis en el log para
+    botones sin tecla estandar (p.ej. "0xf200" en una linea de log como
+    "0 (0xf200, obc-61697) pressed..." -- el numero "obc-NNNNN" es solo
+    cosmetico y NO sirve para el keymap, hay que usar el hexadecimal),
+    y reinstala el keymap con ella. Invocado desde Ajustes."""
     keys = keymap_installer.AVAILABLE_KEYS
     current = settings.get_hotkey()
     labels = [k.upper() + ("  (actual)" if k == current else "") for k in keys]
-    labels.append(_L(30024))  # "Otra (codigo numerico obc-...)..."
+    labels.append(_L(30024))  # "Otra (codigo hexadecimal)..."
     idx = xbmcgui.Dialog().select(_L(30022), labels)
     if idx < 0:
         return
     if idx == len(keys):
-        code = xbmcgui.Dialog().input(_L(30025), defaultt=current if current.isdigit() else "",
-                                       type=xbmcgui.INPUT_NUMERIC)
-        if not code:
+        default_hex = "%x" % int(current) if current.isdigit() else ""
+        text = xbmcgui.Dialog().input(_L(30025), defaultt=default_hex,
+                                       type=xbmcgui.INPUT_ALPHANUM)
+        if not text:
             return
-        chosen = code
+        text = text.strip().lower()
+        if text.startswith("0x"):
+            text = text[2:]
+        try:
+            value = int(text, 16)
+        except ValueError:
+            _error(_L(30026))
+            return
+        if value <= 0:
+            return
+        chosen = str(value)
     else:
         chosen = keys[idx]
     settings.set_hotkey(chosen)

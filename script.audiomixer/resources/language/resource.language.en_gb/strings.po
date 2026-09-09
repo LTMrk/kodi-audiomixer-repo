@@ -75,9 +75,13 @@ msgid "config.txt rewritten: only the addon's own block was kept."
 msgstr "config.txt rewritten: only the addon's own block was kept."
 
 msgctxt "#30024"
-msgid "Other (numeric obc- code)..."
-msgstr "Other (numeric obc- code)..."
+msgid "Other (hex code)..."
+msgstr "Other (hex code)..."
 
 msgctxt "#30025"
-msgid "Button's numeric code (enable debug logging, press the button, look for 'obc-NNNNN' in Kodi's log)"
-msgstr "Button's numeric code (enable debug logging, press the button, look for 'obc-NNNNN' in Kodi's log)"
+msgid "Button's hex code: enable debug logging, press the button, and look in the log for a line like '... (0xXXXX, obc-NNNNN) pressed...'. Type the 0xXXXX part here (with or without '0x'); the obc-NNNNN number does NOT work, it's for reference only."
+msgstr "Button's hex code: enable debug logging, press the button, and look in the log for a line like '... (0xXXXX, obc-NNNNN) pressed...'. Type the 0xXXXX part here (with or without '0x'); the obc-NNNNN number does NOT work, it's for reference only."
+
+msgctxt "#30026"
+msgid "Invalid hexadecimal code."
+msgstr "Invalid hexadecimal code."
