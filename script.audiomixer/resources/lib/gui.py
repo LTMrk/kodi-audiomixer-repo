@@ -255,10 +255,13 @@ class MixerWindow(xbmcgui.WindowDialog):
 
         label = xbmcgui.ControlLabel(label_x, track_y - 2, label_w, track_h + 4,
                                       label_text, textColor="0xFFFFFFFF", font="font12")
-        # Boton invisible: solo da foco/navegacion/clic sobre toda la pista.
+        # Boton invisible (sin foco): solo da navegacion/clic sobre toda la
+        # pista. Con foco SI se ve -- resalte translucido sobre la pista,
+        # para saber en todo momento (con teclado/mando, sin raton) sobre
+        # que slider estas antes de mover algo con izquierda/derecha.
         slider_btn = xbmcgui.ControlButton(
             track_x, track_y, track_w, track_h, label="",
-            focusTexture=os.path.join(MEDIA, "transparent.png"),
+            focusTexture=os.path.join(MEDIA, "slider_focus.png"),
             noFocusTexture=os.path.join(MEDIA, "transparent.png"))
         nib_img = xbmcgui.ControlImage(
             self._nib_x(track_x, track_w, percent), nib_y, NIB_W, NIB_H,

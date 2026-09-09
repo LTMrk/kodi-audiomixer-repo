@@ -108,8 +108,10 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   También puedes abrirlo desde **Complementos > Complementos de programa > Audio Channel
   Mixer**, o desde el menu contextual del reproductor (tecla `C`, o clic derecho) si te
   funciona en tu configuracion.
-- **Arriba/Abajo** mueve el foco entre los sliders (y llega a los botones en los extremos).
-  **Izquierda/Derecha** sube o baja el porcentaje del slider con foco, en pasos del 2%.
+- **Arriba/Abajo** mueve el foco entre los sliders (y llega a los botones en los extremos), que
+  se resaltan con un brillo translucido para saber en todo momento sobre cual estas sin usar el
+  raton. **Izquierda/Derecha** sube o baja el porcentaje del slider con foco, en pasos del 2%.
+  **OK/Intro** sobre "Cambiar de modo" o "Guardar y cerrar" los activa igual que un clic.
 - Con **raton**, haz clic en cualquier punto de la barra de un slider para poner el valor
   directamente en esa posicion; los botones tambien responden al clic.
 - **Modo Simple**: 50% = mezcla estandar (sin cambios), 100% = doble de ganancia, 0% = silenciado.
