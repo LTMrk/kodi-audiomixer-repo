@@ -13,11 +13,12 @@ Requisitos previos (fuera del addon):
 
 - Modo **Simple** (4 controles): Frontales L/R, Central, LFE, Surround (SL/SR juntos).
 - Modo **Avanzado** (12 controles): la contribucion de cada uno de los 6 canales de origen a la salida L, y por separado a la salida R.
-- Escribe automaticamente (con un pequeno retardo) la linea `Copy:` correspondiente en un
-  archivo propio del addon (dentro de la carpeta de datos de Kodi, nunca en
-  `C:\Program Files\...`), que tu `config.txt` real de Equalizer APO incluye mediante una
-  linea `Include:` (ver "Instalacion" mas abajo) — asi el addon nunca depende de tener
-  permisos de escritura sobre la carpeta de Equalizer APO.
+- Escribe automaticamente (con un pequeno retardo) la linea `Copy:` correspondiente,
+  preferentemente **directamente en tu `config.txt` real** de Equalizer APO. Solo si eso
+  falla (algunos sistemas restringen la escritura en `C:\Program Files\...` de forma poco
+  clara) usa como alternativa un archivo propio del addon dentro de la carpeta de datos de
+  Kodi, que en ese caso tu `config.txt` real debe incluir mediante una linea `Include:` (ver
+  "Instalacion" mas abajo).
 - Equalizer APO recarga el archivo en caliente: los cambios se oyen al instante, sin reiniciar Kodi ni el audio.
 - **Varios dispositivos de salida**: si tienes Equalizer APO activo en mas de un dispositivo
   (p.ej. altavoces y auriculares), puedes elegir a cual de ellos se aplica la mezcla. El addon
@@ -34,29 +35,31 @@ Requisitos previos (fuera del addon):
 2. En Kodi: **Ajustes > Complementos > Instalar desde archivo zip**, y selecciona el zip descargado.
 3. Abre el addon desde **Complementos > Complementos de programa > Audio Channel Mixer**.
 
-### Paso unico: enlazar con tu config.txt real
+### Como escribe el addon (opcion A / opcion B)
 
-El addon **nunca escribe directamente** en `C:\Program Files\EqualizerAPO\config\config.txt`
-(esa carpeta suele estar protegida y dar problemas de permisos poco fiables). En su lugar,
-escribe en un archivo propio dentro de la carpeta de datos de Kodi
-(`.../userdata/addon_data/script.audiomixer/kodi_audiomixer.txt`), y tu `config.txt` real solo
-necesita **una linea, anadida una sola vez**, para incluirlo:
-
-1. Abre el addon una vez (Complementos > Complementos de programa > Audio Channel Mixer). Si
-   tu `config.txt` real (ver Ajustes) todavia no tiene esa linea, te mostrara un dialogo con el
-   texto exacto a copiar, algo como:
+1. **Opcion A (normal, sin pasos extra):** el addon intenta escribir directamente en tu
+   `config.txt` real (Ajustes > Ruta de config.txt). Si tienes permisos de escritura ahi (la
+   mayoria de instalaciones), no tienes que hacer nada mas — abre el addon y ya funciona.
+2. **Opcion B (solo si la A falla):** si escribir en `config.txt` no es posible (algunos
+   sistemas restringen `C:\Program Files\...` de forma poco clara, sin dar ni siquiera un
+   error visible), el addon usa automaticamente un archivo propio dentro de la carpeta de
+   datos de Kodi (`.../userdata/addon_data/script.audiomixer/kodi_audiomixer.txt`) y te lo
+   indica en el titulo de la ventana (`[archivo de respaldo, revisa Include:]`). En ese caso
+   hace falta **un paso manual, una sola vez**: te muestra un dialogo con la linea exacta a
+   anadir al final de tu `config.txt` real, algo como:
    ```
    Include: "C:\Users\<tu-usuario>\AppData\Roaming\Kodi\userdata\addon_data\script.audiomixer\kodi_audiomixer.txt"
    ```
-2. Abre tu `config.txt` real con el Bloc de notas y pega esa linea al final, luego guarda.
-3. Listo — a partir de ahi, cualquier cambio que hagas con los sliders se aplica automaticamente
-   (Equalizer APO recarga tanto `config.txt` como los archivos que incluye en caliente).
+   Abre tu `config.txt` real con el Bloc de notas, pega esa linea al final y guarda. A partir
+   de ahi, los cambios se aplican automaticamente (Equalizer APO recarga tanto `config.txt`
+   como los archivos que incluye, en caliente).
 
 ### Ajustes del addon
 Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**, y revisa:
-- **Ruta de config.txt**: la ruta de tu `config.txt` REAL de Equalizer APO (por defecto
-  `C:\Program Files\EqualizerAPO\config\config.txt`). El addon la usa solo para comprobar si ya
-  tiene la linea `Include:` de arriba y para poder avisarte si falta — no escribe ahi.
+- **Ruta de config.txt**: la ruta de tu `config.txt` real de Equalizer APO (por defecto
+  `C:\Program Files\EqualizerAPO\config\config.txt`). Es donde el addon intenta escribir
+  primero (opcion A); solo se usa para mostrar el aviso de `Include:` si hace falta caer a la
+  opcion B.
 - **Modo por defecto**: Simple o Avanzado.
 - **Retardo de escritura**: milisegundos de espera tras soltar el slider antes de escribir el archivo (evita cortes si mueves varios sliders seguidos).
 - **Dispositivo de salida > Detectar dispositivos y elegir...**: muestra los dispositivos de
@@ -81,17 +84,16 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
 
 ## Notas tecnicas
 
-- El addon escribe siempre en `.../userdata/addon_data/script.audiomixer/kodi_audiomixer.txt`,
-  nunca en tu `config.txt` real — este ultimo solo necesita la linea `Include:` de arriba,
-  anadida una vez a mano. Esto evita depender de permisos de escritura sobre
-  `C:\Program Files\...`, que en algunos sistemas fallan de forma poco clara (sin excepcion ni
-  error visible, sin llegar a escribir realmente).
-- Dentro de ese archivo propio, el addon nunca borra nada que no sea suyo: cada dispositivo (o
-  el global, si no eliges ninguno) tiene su propio bloque marcado `# BEGIN KODI AUDIOMIXER
-  [clave] ... # END KODI AUDIOMIXER [clave]`, y solo se reemplaza el bloque del dispositivo que
-  estas editando.
-- Si escribir ese archivo propio falla, revisa el espacio en disco o los permisos de tu perfil
-  de Kodi (`userdata`) — no deberia depender nunca de `Program Files`.
+- Cada vez que abres el mezclador, el addon prueba a escribir en tu `config.txt` real
+  (opcion A); solo si eso falla cae al archivo propio en `addon_data` (opcion B) para esa
+  sesion. El titulo de la ventana indica `[archivo de respaldo, revisa Include:]` cuando esta
+  en modo B.
+- En cualquiera de los dos archivos, el addon nunca borra nada que no sea suyo: cada
+  dispositivo (o el global, si no eliges ninguno) tiene su propio bloque marcado
+  `# BEGIN KODI AUDIOMIXER [clave] ... # END KODI AUDIOMIXER [clave]`, y solo se reemplaza el
+  bloque del dispositivo que estas editando.
+- Si ni el `config.txt` real ni el archivo de respaldo se pueden escribir, revisa permisos y
+  espacio en disco.
 
 ## Que pasa si algo no esta bien configurado
 
@@ -99,15 +101,15 @@ Antes de abrir la ventana del mezclador, el addon comprueba el entorno y avisa c
 dialogo explicando el problema (en vez de fallar en silencio o con un error tecnico) si:
 
 - No estas en Windows (el addon solo funciona con Equalizer APO, que es Windows-only).
-- No se puede escribir en el archivo propio del addon (dentro de `userdata`): revisa espacio
-  en disco o permisos de tu perfil de Kodi — no deberia pasar en un uso normal.
-- Ese archivo propio tiene marcas `BEGIN/END KODI AUDIOMIXER` mal formadas (huerfanas, anidadas
-  o duplicadas, por ejemplo por una edicion manual a medias): el addon **no abre la ventana ni
-  toca el archivo**, te lista el problema exacto (con numero de linea) y te pide revisarlo a
-  mano primero. Esto es a proposito: mejor avisar que arriesgarse a escribir sobre un archivo
-  que no se puede interpretar con seguridad.
-- Tu `config.txt` real todavia no tiene la linea `Include:` hacia el archivo del addon: te
-  muestra el texto exacto a anadir (ver "Paso unico" mas arriba). No bloquea el uso del addon,
+- No se puede escribir ni en tu `config.txt` real ni en el archivo de respaldo del addon:
+  revisa permisos o espacio en disco.
+- El archivo en el que va a escribir (real o de respaldo) tiene marcas `BEGIN/END KODI
+  AUDIOMIXER` mal formadas (huerfanas, anidadas o duplicadas, por ejemplo por una edicion
+  manual a medias): el addon **no abre la ventana ni toca el archivo**, te lista el problema
+  exacto (con numero de linea) y te pide revisarlo a mano primero. Esto es a proposito: mejor
+  avisar que arriesgarse a escribir sobre un archivo que no se puede interpretar con seguridad.
+- Esta usando el archivo de respaldo (opcion B) y tu `config.txt` real todavia no tiene la
+  linea `Include:` hacia el: te muestra el texto exacto a anadir. No bloquea el uso del addon,
   solo avisa — el audio no cambiara hasta que la anadas.
 - Cualquier otro error inesperado al abrir la ventana queda registrado en el log de Kodi
   y se muestra un aviso, en lugar de un cierre silencioso del addon.

@@ -42,16 +42,17 @@ class MixerWindow(xbmcgui.WindowDialog):
 
     def __init__(self):
         super(MixerWindow, self).__init__()
-        # El bloque del mezclador se lee/escribe siempre en un archivo propio
-        # del addon (escribible sin depender de permisos sobre Program
-        # Files); el config.txt real de Equalizer APO solo necesita una vez
-        # la linea "Include:" que apunta a este archivo (ver main.py).
-        self.write_path = settings.get_local_write_path()
+        # Opcion A (preferida): escribe directamente en el config.txt real
+        # de Equalizer APO. Opcion B (alternativa): si eso falla, usa un
+        # archivo propio del addon dentro de addon_data, que el config.txt
+        # real debe incluir una vez a mano (ver main.py._include_already_configured).
+        self.write_path, self.using_fallback = settings.resolve_write_path()
         self.debounce_s = settings.get_debounce_ms() / 1000.0
         self.device_pattern = settings.get_device_pattern()
         self.device_key = (self.device_pattern.replace("[", "").replace("]", "")
                             or apo_writer.GLOBAL_KEY)
-        _log("init: write_path=%r device_key=%r" % (self.write_path, self.device_key))
+        _log("init: write_path=%r using_fallback=%s device_key=%r"
+             % (self.write_path, self.using_fallback, self.device_key))
 
         self.sliders = {}       # key -> ControlSlider (foco/valor, tirador invisible)
         self.value_labels = {}  # key -> ControlLabel
@@ -60,7 +61,7 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.dynamic_controls = []
 
         self._closing = False
-        self._last_written_key = None
+        self._last_seen_key = None
         self._last_change_ts = 0
         self._pending = True  # forzar una primera escritura al abrir
 
@@ -111,13 +112,16 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.addControl(bg)
 
         device_label = self.device_pattern if self.device_pattern else "todos los dispositivos"
-        title = xbmcgui.ControlLabel(PX + 20, PY + 12, PW - 40, 30,
-                                      "Mezclador de canales - %s" % device_label,
+        title_text = "Mezclador de canales - %s" % device_label
+        if self.using_fallback:
+            title_text += "  [archivo de respaldo, revisa Include:]"
+        title = xbmcgui.ControlLabel(PX + 20, PY + 12, PW - 40, 30, title_text,
                                       textColor="0xFFFFFFFF", font="font12_title")
         self.addControl(title)
 
+        toggle_rect = (PX + PW - 240, PY + 10, 220, 40)
         self.toggle_btn = xbmcgui.ControlButton(
-            PX + PW - 240, PY + 10, 220, 40, "Cambiar a modo Avanzado",
+            *toggle_rect, label="Cambiar a modo Avanzado",
             focusTexture=os.path.join(MEDIA, "button_focus.png"),
             noFocusTexture=os.path.join(MEDIA, "button_bg.png"),
             font="font12")
@@ -125,14 +129,17 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.toggle_btn.setNavigation(self.toggle_btn, self.toggle_btn,
                                        self.toggle_btn, self.toggle_btn)
         self.toggle_btn_id = self.toggle_btn.getId()
+        self._toggle_rect = toggle_rect
 
+        close_rect = (PX + 20, PY + PH - 55, 200, 40)
         self.close_btn = xbmcgui.ControlButton(
-            PX + 20, PY + PH - 55, 200, 40, "Guardar y cerrar",
+            *close_rect, label="Guardar y cerrar",
             focusTexture=os.path.join(MEDIA, "button_focus.png"),
             noFocusTexture=os.path.join(MEDIA, "button_bg.png"),
             font="font12")
         self.addControl(self.close_btn)
         self.close_btn_id = self.close_btn.getId()
+        self._close_rect = close_rect
         _log("botones creados: toggle_btn_id=%s close_btn_id=%s"
              % (self.toggle_btn_id, self.close_btn_id))
 
@@ -268,14 +275,37 @@ class MixerWindow(xbmcgui.WindowDialog):
         if action_id in (ACTION_PREVIOUS_MENU, ACTION_NAV_BACK):
             self._closing = True
         elif action_id == ACTION_MOUSE_LEFT_CLICK:
-            # Con raton, onClick/onControl no se estan disparando para los
-            # botones de esta ventana (solo llega el ACTION_MOUSE_LEFT_CLICK
-            # crudo). En vez de calcular a mano coordenadas de pantalla,
-            # se usa el control que Kodi ya tiene enfocado (el hover del
-            # raton lo mueve el foco) y se reutiliza onClick con ese id.
+            self._handle_mouse_click(action)
+
+    def _handle_mouse_click(self, action):
+        # Con raton, onClick/onControl no se disparan de forma fiable para
+        # los botones de esta ventana. self.getFocusId() (probado antes)
+        # tampoco es de fiar: a veces devuelve el id de un control que no
+        # es el que esta bajo el cursor. Se usan las coordenadas reales del
+        # clic contra los rectangulos conocidos de los botones; si no cae
+        # en ninguno, se cae de vuelta al control con foco por si acaso.
+        try:
+            x, y = action.getAmount1(), action.getAmount2()
+        except Exception as e:
+            _log("no se pudo leer la posicion del clic: %r" % e)
+            x = y = None
+
+        _log("clic de raton en (%s, %s) toggle_rect=%s close_rect=%s"
+             % (x, y, self._toggle_rect, self._close_rect))
+
+        if x is not None and self._point_in(x, y, self._toggle_rect):
+            self._toggle_mode()
+        elif x is not None and self._point_in(x, y, self._close_rect):
+            self._closing = True
+        else:
             focus_id = self.getFocusId()
-            _log("click de raton, control con foco=%s" % focus_id)
+            _log("clic fuera de los rects conocidos, uso el foco=%s" % focus_id)
             self.onClick(focus_id)
+
+    @staticmethod
+    def _point_in(x, y, rect):
+        rx, ry, rw, rh = rect
+        return rx <= x <= rx + rw and ry <= y <= ry + rh
 
     def _toggle_mode(self):
         _log("_toggle_mode: %s -> %s" % (self.mode, "advanced" if self.mode == "simple" else "simple"))
@@ -322,9 +352,17 @@ class MixerWindow(xbmcgui.WindowDialog):
     def _maybe_write(self):
         state_key = self._current_state_key()
         now = time.time()
-        if state_key != self._last_written_key:
-            self._pending = True
+        if state_key != self._last_seen_key:
+            # Nuevo cambio detectado: reinicia el reloj del debounce. Antes
+            # esto se comparaba contra _last_written_key, que solo se
+            # actualiza DENTRO del bloque de escritura de mas abajo -- como
+            # ese bloque nunca se alcanzaba (el timestamp se reiniciaba en
+            # cada tick porque la condicion seguia siendo cierta), el
+            # debounce jamas llegaba a cumplirse y no se escribia nunca
+            # nada de forma automatica, ni siquiera estando quieto.
+            self._last_seen_key = state_key
             self._last_change_ts = now
+            self._pending = True
 
         if self._pending and (now - self._last_change_ts) >= self.debounce_s:
             copy_line = self._compute_copy_line()
@@ -352,7 +390,6 @@ class MixerWindow(xbmcgui.WindowDialog):
             except Exception as e:
                 _log("EXCEPCION NO ESPERADA al escribir: %r" % e)
                 raise
-            self._last_written_key = state_key
             self._pending = False
 
     def _force_write(self):

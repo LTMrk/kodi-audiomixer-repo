@@ -63,27 +63,29 @@ def _include_already_configured(write_path):
 
 
 def _check_prerequisites():
-    """Valida el entorno antes de abrir la GUI: SO y el archivo propio del
-    addon donde se escribe la mezcla (dentro de addon_data, nunca en
-    'Program Files'). Devuelve False (tras avisar al usuario) si falta
-    algo imprescindible.
+    """Valida el entorno antes de abrir la GUI: SO y donde se va a escribir
+    la mezcla. Opcion A (preferida): el config.txt real de Equalizer APO
+    directamente. Opcion B (alternativa): un archivo propio del addon en
+    addon_data, solo si escribir en el config.txt real falla. Devuelve
+    False (tras avisar al usuario) si falta algo imprescindible.
     """
     if platform.system() != "Windows":
         _error("Este complemento solo funciona en Windows, junto con Equalizer APO.\n"
                "El sistema operativo detectado no es Windows.")
         return False
 
-    write_path = settings.get_local_write_path()
+    write_path, using_fallback = settings.resolve_write_path()
 
-    try:
-        with open(write_path, "a", encoding="utf-8"):
-            pass
-    except OSError as e:
-        _error("No se puede escribir en:\n%s\n\n%s\n\n"
-               "Esta ruta esta dentro de la carpeta de datos del propio "
-               "addon, no deberia dar problemas de permisos; revisa el "
-               "espacio en disco o los permisos de tu perfil de Kodi." % (write_path, e))
-        return False
+    if using_fallback:
+        try:
+            with open(write_path, "a", encoding="utf-8"):
+                pass
+        except OSError as e:
+            _error("No se puede escribir ni en tu config.txt "
+                   "(Ajustes > Ruta de config.txt) ni en el archivo de "
+                   "respaldo del addon:\n%s\n\n%s\n\n"
+                   "Revisa permisos de escritura o espacio en disco." % (write_path, e))
+            return False
 
     problems = apo_writer.validate(write_path)
     if problems:
@@ -91,13 +93,14 @@ def _check_prerequisites():
             _L(30017), "\n- ".join(problems), _L(30018)))
         return False
 
-    if _include_already_configured(write_path) is False:
+    if using_fallback and _include_already_configured(write_path) is False:
         xbmcgui.Dialog().ok(
             ADDON_NAME,
-            "Paso unico de configuracion: para que Equalizer APO aplique la "
-            "mezcla, anade esta linea al FINAL de tu config.txt real "
-            "(Ajustes > Ruta de config.txt, o edita el archivo a mano con "
-            "el Bloc de notas) y guardala:\n\n%s\n\n"
+            "No se pudo escribir directamente en tu config.txt real, asi "
+            "que el addon esta usando un archivo de respaldo propio. Para "
+            "que Equalizer APO lo aplique, anade esta linea al FINAL de tu "
+            "config.txt real (Ajustes > Ruta de config.txt, o edita el "
+            "archivo a mano con el Bloc de notas) y guardala:\n\n%s\n\n"
             "El addon ya esta listo para usarse mientras tanto; el "
             "audio no cambiara hasta que anadas esa linea." % settings.get_include_line())
 

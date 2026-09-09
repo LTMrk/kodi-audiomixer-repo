@@ -27,6 +27,25 @@ def get_include_line():
     return 'Include: "%s"' % get_local_write_path()
 
 
+def resolve_write_path():
+    """Decide donde escribir el bloque del mezclador esta sesion.
+
+    Opcion A (preferida): el config.txt real de Equalizer APO directamente,
+    si se puede escribir ahi. Opcion B (alternativa): el archivo propio del
+    addon dentro de addon_data, solo si escribir en el config.txt real
+    falla (algunos sistemas restringen la escritura en 'Program Files' de
+    forma poco clara). Devuelve (path, es_alternativa: bool)."""
+    config_path = get_config_path()
+    if config_path:
+        try:
+            with open(config_path, "a", encoding="utf-8"):
+                pass
+            return config_path, False
+        except OSError:
+            pass
+    return get_local_write_path(), True
+
+
 def get_debounce_ms():
     try:
         return int(ADDON.getSettingInt("debounce_ms"))
