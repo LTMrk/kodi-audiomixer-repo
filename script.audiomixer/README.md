@@ -15,6 +15,13 @@ Requisitos previos (fuera del addon):
 - Modo **Avanzado** (12 controles): la contribucion de cada uno de los 6 canales de origen a la salida L, y por separado a la salida R.
 - Escribe automaticamente (con un pequeno retardo) la linea `Copy:` correspondiente en un bloque marcado de tu `config.txt`, sin tocar el resto de tu configuracion de Equalizer APO.
 - Equalizer APO recarga el archivo en caliente: los cambios se oyen al instante, sin reiniciar Kodi ni el audio.
+- **Varios dispositivos de salida**: si tienes Equalizer APO activo en mas de un dispositivo
+  (p.ej. altavoces y auriculares), puedes elegir a cual de ellos se aplica la mezcla. El addon
+  usa la directiva nativa de Equalizer APO `Device: <patron>` para que cada dispositivo tenga
+  su propio bloque dentro del mismo `config.txt`, sin pisarse entre si.
+- **Refleja el estado real del archivo al abrir**: en vez de arrancar siempre en los valores por
+  defecto, lee el bloque ya guardado en `config.txt` para el dispositivo elegido (si existe) y
+  coloca los sliders donde realmente estan aplicados ahora mismo.
 
 ## Instalacion
 
@@ -28,6 +35,13 @@ Antes de usarlo, entra en **Complementos > Mis complementos > Audio Channel Mixe
 - **Ruta de config.txt**: por defecto `C:\Program Files\EqualizerAPO\config\config.txt`. Cambiala si tu instalacion esta en otra ruta.
 - **Modo por defecto**: Simple o Avanzado.
 - **Retardo de escritura**: milisegundos de espera tras soltar el slider antes de escribir el archivo (evita cortes si mueves varios sliders seguidos).
+- **Dispositivo de salida > Detectar dispositivos y elegir...**: muestra los dispositivos de
+  sonido detectados en el sistema (via WMI) y guarda el elegido como patron `Device:` de
+  Equalizer APO. Elige **"Todos los dispositivos (global)"** si solo usas un dispositivo o
+  quieres una mezcla unica para todos. El campo de texto **Dispositivo** debajo muestra el
+  patron actual y tambien se puede editar a mano si el autodetectado no coincide exactamente
+  con como Equalizer APO ve tu dispositivo (revisa el nombre real en tu `config.txt`, en la
+  linea `Device:` que Equalizer APO anade automaticamente al arrancar).
 
 ## Uso
 
@@ -43,7 +57,14 @@ Antes de usarlo, entra en **Complementos > Mis complementos > Audio Channel Mixe
 
 ## Notas tecnicas
 
-- El addon nunca borra el resto de tu `config.txt`: solo gestiona el contenido entre las marcas `# BEGIN KODI AUDIOMIXER` y `# END KODI AUDIOMIXER`.
+- El addon nunca borra el resto de tu `config.txt`: cada dispositivo (o el global, si no eliges
+  ninguno) tiene su propio bloque marcado `# BEGIN KODI AUDIOMIXER [clave] ... # END KODI
+  AUDIOMIXER [clave]`, y solo se reemplaza el bloque del dispositivo que estas editando; el
+  resto del archivo (incluidos los bloques de otros dispositivos) se deja intacto.
+- Los `config.txt` escritos por versiones anteriores del addon (sin dispositivo, formato
+  `# BEGIN KODI AUDIOMIXER` sin corchetes) se siguen reconociendo y se tratan como el
+  dispositivo "Todos los dispositivos (global)"; se actualizan al nuevo formato automaticamente
+  la primera vez que el addon vuelve a escribir ahi.
 - Si escribir el archivo falla (por ejemplo por permisos de `Program Files`), da permisos de escritura a tu usuario sobre la carpeta `EqualizerAPO\config`.
 
 ## Que pasa si algo no esta bien configurado
@@ -59,5 +80,10 @@ dialogo explicando el problema (en vez de fallar en silencio o con un error tecn
   (creara el archivo) o cancelar para revisar la ruta.
 - No hay permisos de escritura sobre esa carpeta: te lo dice explicitamente en vez de morir
   con una excepcion.
+- `config.txt` tiene marcas `BEGIN/END KODI AUDIOMIXER` mal formadas (huerfanas, anidadas o
+  duplicadas, por ejemplo por una edicion manual a medias): el addon **no abre la ventana ni
+  toca el archivo**, te lista el problema exacto (con numero de linea) y te pide revisarlo a
+  mano primero. Esto es a proposito: mejor avisar que arriesgarse a escribir sobre un archivo
+  que no se puede interpretar con seguridad.
 - Cualquier otro error inesperado al abrir la ventana queda registrado en el log de Kodi
   y se muestra un aviso, en lugar de un cierre silencioso del addon.

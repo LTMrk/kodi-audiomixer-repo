@@ -21,3 +21,35 @@ msgstr "Write delay (ms)"
 msgctxt "#30010"
 msgid "Audio Channel Mixer"
 msgstr "Audio Channel Mixer"
+
+msgctxt "#30011"
+msgid "Output device"
+msgstr "Output device"
+
+msgctxt "#30012"
+msgid "Device (empty = all / global)"
+msgstr "Device (empty = all / global)"
+
+msgctxt "#30013"
+msgid "Detect devices and pick..."
+msgstr "Detect devices and pick..."
+
+msgctxt "#30014"
+msgid "All devices (global)"
+msgstr "All devices (global)"
+
+msgctxt "#30015"
+msgid "No audio device was auto-detected. You can type the name manually in Settings."
+msgstr "No audio device was auto-detected. You can type the name manually in Settings."
+
+msgctxt "#30016"
+msgid "Device selected"
+msgstr "Device selected"
+
+msgctxt "#30017"
+msgid "config.txt has malformed section markers and will not be touched, to avoid risking your setup:"
+msgstr "config.txt has malformed section markers and will not be touched, to avoid risking your setup:"
+
+msgctxt "#30018"
+msgid "Check config.txt by hand (look for BEGIN/END KODI AUDIOMIXER) and try again."
+msgstr "Check config.txt by hand (look for BEGIN/END KODI AUDIOMIXER) and try again."

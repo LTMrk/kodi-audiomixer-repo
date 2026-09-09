@@ -9,12 +9,41 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "resources", "lib"))
 import xbmc
 import xbmcgui
 from resources.lib import addon_settings as settings
+from resources.lib.addon_settings import ADDON
+from resources.lib import apo_writer
 
 ADDON_NAME = "Audio Channel Mixer"
 
 
+def _L(string_id):
+    return ADDON.getLocalizedString(string_id)
+
+
 def _error(message):
     xbmcgui.Dialog().ok(ADDON_NAME, message)
+
+
+def _pick_device():
+    """Detecta dispositivos de audio del sistema y deja elegir uno (o
+    "todos/global") para asociarlo al patron 'Device:' de Equalizer APO.
+    Invocado desde Ajustes via RunScript(script.audiomixer,pick_device).
+    """
+    from resources.lib import audio_devices
+
+    devices = audio_devices.list_playback_devices()
+    if not devices:
+        xbmcgui.Dialog().notification(
+            ADDON_NAME, _L(30015), xbmcgui.NOTIFICATION_WARNING, 4000)
+
+    options = [_L(30014)] + devices
+    idx = xbmcgui.Dialog().select(_L(30011), options)
+    if idx < 0:
+        return
+    chosen = "" if idx == 0 else devices[idx - 1]
+    settings.set_device_pattern(chosen)
+    xbmcgui.Dialog().notification(
+        ADDON_NAME, "%s: %s" % (_L(30016), chosen or options[0]),
+        xbmcgui.NOTIFICATION_INFO, 3000)
 
 
 def _check_prerequisites():
@@ -64,11 +93,19 @@ def _check_prerequisites():
                "esa carpeta e intentalo de nuevo." % (path, e))
         return False
 
+    problems = apo_writer.validate(path)
+    if problems:
+        _error("%s\n\n- %s\n\n%s" % (
+            _L(30017), "\n- ".join(problems), _L(30018)))
+        return False
+
     return True
 
 
 if __name__ == "__main__":
-    if _check_prerequisites():
+    if len(sys.argv) > 1 and sys.argv[1] == "pick_device":
+        _pick_device()
+    elif _check_prerequisites():
         try:
             from resources.lib.gui import MixerWindow
             window = MixerWindow()

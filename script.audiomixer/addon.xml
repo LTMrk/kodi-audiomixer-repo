@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.audiomixer"
        name="Audio Channel Mixer (EQ APO)"
-       version="1.0.4"
+       version="1.0.5"
        provider-name="LTMrk">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
@@ -18,8 +18,8 @@
     <extension point="xbmc.addon.metadata">
         <summary lang="es_ES">Control de volumen por canal (5.1) sobre Equalizer APO</summary>
         <summary lang="en_GB">Per-channel volume control (5.1) via Equalizer APO</summary>
-        <description lang="es_ES">Permite ajustar en tiempo real la ganancia de cada canal de origen (L, R, C, LFE, SL, SR) dentro de la mezcla final a estereo que hace Equalizer APO. Incluye un modo simple de 4 controles (Frontales, Central, LFE, Surround) y un modo avanzado de 12 controles (contribucion de cada canal a L y a R por separado).</description>
-        <description lang="en_GB">Adjusts in real time the gain of each source channel (L, R, C, LFE, SL, SR) within the final stereo downmix produced by Equalizer APO. Includes a simple 4-slider mode (Front, Center, LFE, Surround) and an advanced 12-slider mode (each channel's contribution to L and to R separately).</description>
+        <description lang="es_ES">Permite ajustar en tiempo real la ganancia de cada canal de origen (L, R, C, LFE, SL, SR) dentro de la mezcla final a estereo que hace Equalizer APO. Incluye un modo simple de 4 controles (Frontales, Central, LFE, Surround) y un modo avanzado de 12 controles (contribucion de cada canal a L y a R por separado). Soporta varios dispositivos de salida (cada uno con su propio ajuste) y recuerda el ultimo valor guardado al volver a abrirlo.</description>
+        <description lang="en_GB">Adjusts in real time the gain of each source channel (L, R, C, LFE, SL, SR) within the final stereo downmix produced by Equalizer APO. Includes a simple 4-slider mode (Front, Center, LFE, Surround) and an advanced 12-slider mode (each channel's contribution to L and to R separately). Supports multiple output devices (each with its own setting) and restores the last saved value when reopened.</description>
         <platform>windows</platform>
         <language>es_ES en_GB</language>
         <license>MIT</license>

@@ -21,3 +21,35 @@ msgstr "Retardo de escritura (ms)"
 msgctxt "#30010"
 msgid "Mezclador de canales (Audio Channel Mixer)"
 msgstr "Mezclador de canales (Audio Channel Mixer)"
+
+msgctxt "#30011"
+msgid "Dispositivo de salida"
+msgstr "Dispositivo de salida"
+
+msgctxt "#30012"
+msgid "Dispositivo (vacio = todos / global)"
+msgstr "Dispositivo (vacio = todos / global)"
+
+msgctxt "#30013"
+msgid "Detectar dispositivos y elegir..."
+msgstr "Detectar dispositivos y elegir..."
+
+msgctxt "#30014"
+msgid "Todos los dispositivos (global)"
+msgstr "Todos los dispositivos (global)"
+
+msgctxt "#30015"
+msgid "No se detecto ningun dispositivo de audio automaticamente. Puedes escribir el nombre a mano en Ajustes."
+msgstr "No se detecto ningun dispositivo de audio automaticamente. Puedes escribir el nombre a mano en Ajustes."
+
+msgctxt "#30016"
+msgid "Dispositivo seleccionado"
+msgstr "Dispositivo seleccionado"
+
+msgctxt "#30017"
+msgid "El archivo config.txt tiene marcas de seccion mal formadas y no se va a tocar para no arriesgar tu configuracion:"
+msgstr "El archivo config.txt tiene marcas de seccion mal formadas y no se va a tocar para no arriesgar tu configuracion:"
+
+msgctxt "#30018"
+msgid "Revisalo a mano en config.txt (busca BEGIN/END KODI AUDIOMIXER) y vuelve a intentarlo."
+msgstr "Revisalo a mano en config.txt (busca BEGIN/END KODI AUDIOMIXER) y vuelve a intentarlo."

@@ -25,3 +25,13 @@ def get_default_mode():
 
 def addon_path():
     return ADDON.getAddonInfo("path")
+
+
+def get_device_pattern():
+    """Patron de dispositivo (Equalizer APO 'Device:') elegido en Ajustes,
+    o "" si el usuario quiere el mezclador global (todos los dispositivos)."""
+    return (ADDON.getSettingString("device_pattern") or "").strip()
+
+
+def set_device_pattern(pattern):
+    ADDON.setSettingString("device_pattern", pattern or "")
