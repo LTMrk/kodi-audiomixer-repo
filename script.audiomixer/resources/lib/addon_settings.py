@@ -73,3 +73,14 @@ def get_device_pattern():
 
 def set_device_pattern(pattern):
     ADDON.setSettingString("device_pattern", pattern or "")
+
+
+def get_keep_existing_config():
+    """Si esta activado (por defecto), el addon nunca toca nada de
+    config.txt salvo su propio bloque marcado. Si se desactiva, ademas se
+    permite limpiar la linea 'Include:' propia cuando ya no hace falta
+    (opcion A funcionando) -- nunca toca nada mas (Peace GUI, etc.)."""
+    try:
+        return ADDON.getSettingBool("keep_existing_config")
+    except Exception:
+        return True

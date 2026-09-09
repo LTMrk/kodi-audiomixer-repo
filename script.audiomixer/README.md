@@ -27,6 +27,9 @@ Requisitos previos (fuera del addon):
 - **Refleja el estado real del archivo al abrir**: en vez de arrancar siempre en los valores por
   defecto, lee el bloque ya guardado en `config.txt` para el dispositivo elegido (si existe) y
   coloca los sliders donde realmente estan aplicados ahora mismo.
+- **Atajo de teclado (F9)**: se instala solo la primera vez que abres el addon. Pulsando F9 en
+  cualquier pantalla, incluida la reproduccion de video a pantalla completa, se abre el
+  mezclador directamente — no hace falta pasar por el menu contextual.
 
 ## Instalacion
 
@@ -69,14 +72,24 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   patron actual y tambien se puede editar a mano si el autodetectado no coincide exactamente
   con como Equalizer APO ve tu dispositivo (revisa el nombre real en tu `config.txt`, en la
   linea `Device:` que Equalizer APO anade automaticamente al arrancar).
+- **Conservar configuracion existente en config.txt** (activado por defecto): con esto activado,
+  el addon nunca toca nada de `config.txt` salvo su propio bloque marcado. Si lo desactivas, y
+  la opcion A (escritura directa) esta funcionando, tambien se permite limpiar una linea
+  `Include:` propia que hubiera quedado de una sesion anterior en modo B y ya no sirva de nada.
+  Nunca toca ninguna otra configuracion (Peace GUI, etc.).
+- **Instalar/reinstalar atajo de teclado (F9)**: repite la instalacion del atajo si lo has
+  borrado, quieres forzar una recarga, o simplemente quieres confirmar que sigue ahi.
 
 ## Uso
 
-- **Mientras reproduces video**, abre el menu contextual (boton de contexto del mando/skin,
-  tecla `C` en teclado, o el icono "..." del OSD en skins como Estuary) y elige
-  **"Mezclador de canales (Audio Channel Mixer)"**. Tambien puedes abrirlo en cualquier
-  momento desde **Complementos > Complementos de programa > Audio Channel Mixer**.
-- Mueve los sliders con las flechas del mando/teclado.
+- Pulsa **F9** en cualquier pantalla (incluida la reproduccion de video a pantalla completa)
+  para abrir el mezclador directamente. También puedes abrirlo desde **Complementos >
+  Complementos de programa > Audio Channel Mixer**, o desde el menu contextual del reproductor
+  (tecla `C`, o clic derecho) si te funciona en tu configuracion.
+- **Arriba/Abajo** mueve el foco entre los sliders (y llega a los botones en los extremos).
+  **Izquierda/Derecha** sube o baja el porcentaje del slider con foco, en pasos del 2%.
+- Con **raton**, haz clic en cualquier punto de la barra de un slider para poner el valor
+  directamente en esa posicion; los botones tambien responden al clic.
 - **Modo Simple**: 50% = mezcla estandar (sin cambios), 100% = doble de ganancia, 0% = silenciado.
 - **Modo Avanzado**: el valor del slider es el coeficiente directo (0% a 200%) con el que ese canal de origen entra en esa salida.
 - Boton **Cambiar a modo Avanzado/Simple** para alternar.

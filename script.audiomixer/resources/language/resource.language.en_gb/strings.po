@@ -53,3 +53,15 @@ msgstr "config.txt has malformed section markers and will not be touched, to avo
 msgctxt "#30018"
 msgid "Check config.txt by hand (look for BEGIN/END KODI AUDIOMIXER) and try again."
 msgstr "Check config.txt by hand (look for BEGIN/END KODI AUDIOMIXER) and try again."
+
+msgctxt "#30019"
+msgid "Keep existing config.txt content"
+msgstr "Keep existing config.txt content"
+
+msgctxt "#30020"
+msgid "Install/reinstall keyboard shortcut (F9)"
+msgstr "Install/reinstall keyboard shortcut (F9)"
+
+msgctxt "#30021"
+msgid "Keyboard shortcut installed: press F9 on any screen (including video) to open the mixer. If it doesn't work right away, restart Kodi."
+msgstr "Keyboard shortcut installed: press F9 on any screen (including video) to open the mixer. If it doesn't work right away, restart Kodi."

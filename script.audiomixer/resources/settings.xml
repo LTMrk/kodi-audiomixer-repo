@@ -6,6 +6,9 @@
         <setting id="default_mode" type="labelenum" label="30002" values="Simple|Avanzado" default="Simple"/>
         <setting id="debounce_ms" type="slider" label="30003" default="180"
                  range="50,50,1000" option="int"/>
+        <setting id="keep_existing_config" type="bool" label="30019" default="true"/>
+        <setting id="install_keymap" type="action" label="30020"
+                 action="RunScript(script.audiomixer,install_keymap)"/>
     </category>
     <category label="30011">
         <setting id="device_pattern" type="text" label="30012" default=""/>

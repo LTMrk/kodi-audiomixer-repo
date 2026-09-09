@@ -53,3 +53,15 @@ msgstr "El archivo config.txt tiene marcas de seccion mal formadas y no se va a 
 msgctxt "#30018"
 msgid "Revisalo a mano en config.txt (busca BEGIN/END KODI AUDIOMIXER) y vuelve a intentarlo."
 msgstr "Revisalo a mano en config.txt (busca BEGIN/END KODI AUDIOMIXER) y vuelve a intentarlo."
+
+msgctxt "#30019"
+msgid "Conservar configuracion existente en config.txt"
+msgstr "Conservar configuracion existente en config.txt"
+
+msgctxt "#30020"
+msgid "Instalar/reinstalar atajo de teclado (F9)"
+msgstr "Instalar/reinstalar atajo de teclado (F9)"
+
+msgctxt "#30021"
+msgid "Atajo de teclado instalado: pulsa F9 en cualquier pantalla (incluido el video) para abrir el mezclador. Si no funciona a la primera, reinicia Kodi."
+msgstr "Atajo de teclado instalado: pulsa F9 en cualquier pantalla (incluido el video) para abrir el mezclador. Si no funciona a la primera, reinicia Kodi."
