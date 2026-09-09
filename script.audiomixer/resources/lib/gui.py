@@ -109,7 +109,7 @@ class MixerWindow(xbmcgui.WindowDialog):
         self.addControl(self.toggle_btn)
         self.toggle_btn.setNavigation(self.toggle_btn, self.toggle_btn,
                                        self.toggle_btn, self.toggle_btn)
-        self.getControlId = None  # placeholder (no usado)
+        self.toggle_btn_id = self.toggle_btn.getId()
 
         self.close_btn = xbmcgui.ControlButton(
             PX + 20, PY + PH - 55, 200, 40, "Guardar y cerrar",
@@ -117,6 +117,7 @@ class MixerWindow(xbmcgui.WindowDialog):
             noFocusTexture=os.path.join(MEDIA, "button_bg.png"),
             font="font12")
         self.addControl(self.close_btn)
+        self.close_btn_id = self.close_btn.getId()
 
         self.setFocus(self.toggle_btn)
 
@@ -247,11 +248,24 @@ class MixerWindow(xbmcgui.WindowDialog):
         if action.getId() in (ACTION_PREVIOUS_MENU, ACTION_NAV_BACK):
             self._closing = True
 
+    def _toggle_mode(self):
+        self._build_mode("advanced" if self.mode == "simple" else "simple")
+
     def onControl(self, control):
+        # Kodi solo llama a onControl "cuando el control no maneja el
+        # mensaje por si mismo"; para ControlButton el evento normalmente
+        # llega por onClick(controlId) en su lugar. Se dejan los dos
+        # manejadores por seguridad, cada uno cubre casos distintos.
         if control == self.close_btn:
             self._closing = True
         elif control == self.toggle_btn:
-            self._build_mode("advanced" if self.mode == "simple" else "simple")
+            self._toggle_mode()
+
+    def onClick(self, controlId):
+        if controlId == self.close_btn_id:
+            self._closing = True
+        elif controlId == self.toggle_btn_id:
+            self._toggle_mode()
 
     # ---------------------------------------------------------- calculo/escritura
     def _current_state_key(self):
