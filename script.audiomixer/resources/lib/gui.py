@@ -42,12 +42,16 @@ class MixerWindow(xbmcgui.WindowDialog):
 
     def __init__(self):
         super(MixerWindow, self).__init__()
-        self.config_path = settings.get_config_path()
+        # El bloque del mezclador se lee/escribe siempre en un archivo propio
+        # del addon (escribible sin depender de permisos sobre Program
+        # Files); el config.txt real de Equalizer APO solo necesita una vez
+        # la linea "Include:" que apunta a este archivo (ver main.py).
+        self.write_path = settings.get_local_write_path()
         self.debounce_s = settings.get_debounce_ms() / 1000.0
         self.device_pattern = settings.get_device_pattern()
         self.device_key = (self.device_pattern.replace("[", "").replace("]", "")
                             or apo_writer.GLOBAL_KEY)
-        _log("init: config_path=%r device_key=%r" % (self.config_path, self.device_key))
+        _log("init: write_path=%r device_key=%r" % (self.write_path, self.device_key))
 
         self.sliders = {}       # key -> ControlSlider (foco/valor, tirador invisible)
         self.value_labels = {}  # key -> ControlLabel
@@ -75,7 +79,7 @@ class MixerWindow(xbmcgui.WindowDialog):
         mode = settings.get_default_mode()
         percents = None
         try:
-            body = apo_writer.read_block(self.config_path, self.device_key)
+            body = apo_writer.read_block(self.write_path, self.device_key)
         except apo_writer.ApoFormatError:
             body = None  # ya avisado en main.py; abrimos con los valores por defecto
         if not body:
@@ -329,9 +333,9 @@ class MixerWindow(xbmcgui.WindowDialog):
                 body.append("Device: %s" % self.device_pattern)
             body.append(copy_line)
             _log("escribiendo bloque device_key=%r en %r: %r"
-                 % (self.device_key, self.config_path, body))
+                 % (self.device_key, self.write_path, body))
             try:
-                apo_writer.write_block(self.config_path, self.device_key, body)
+                apo_writer.write_block(self.write_path, self.device_key, body)
                 _log("escritura OK")
             except apo_writer.ApoFormatError as e:
                 _log("ApoFormatError al escribir: %s" % e)
