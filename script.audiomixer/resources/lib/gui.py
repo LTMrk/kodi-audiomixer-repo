@@ -56,9 +56,9 @@ class MixerWindow(xbmcgui.WindowDialog):
             focusTexture=os.path.join(MEDIA, "button_focus.png"),
             noFocusTexture=os.path.join(MEDIA, "button_bg.png"),
             font="font12")
+        self.addControl(self.toggle_btn)
         self.toggle_btn.setNavigation(self.toggle_btn, self.toggle_btn,
                                        self.toggle_btn, self.toggle_btn)
-        self.addControl(self.toggle_btn)
         self.getControlId = None  # placeholder (no usado)
 
         self.close_btn = xbmcgui.ControlButton(
