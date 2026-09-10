@@ -421,8 +421,25 @@ class MixerWindow(xbmcgui.WindowDialog):
         return rx <= x <= rx + rw and ry <= y <= ry + rh
 
     def _toggle_mode(self):
-        _log("_toggle_mode: %s -> %s" % (self.mode, "advanced" if self.mode == "simple" else "simple"))
-        self._build_mode("advanced" if self.mode == "simple" else "simple")
+        new_mode = "advanced" if self.mode == "simple" else "simple"
+        _log("_toggle_mode: %s -> %s" % (self.mode, new_mode))
+        # Convierte los valores actuales (los que se acaban de tocar en
+        # esta sesion) al equivalente del otro modo con la misma matriz
+        # que se usa para leer/escribir config.txt, en vez de descartarlos
+        # y volver a los valores por defecto o a los ya guardados en
+        # disco -- antes _loaded_percents solo se aplicaba en la
+        # construccion inicial de la ventana (ver __init__), asi que
+        # cualquier cambio de modo posterior perdia lo que se acababa de
+        # mover. Ida y vuelta Simple->Avanzado->Simple es exacta; Avanzado
+        # ->Simple es la misma aproximacion (un unico fader por grupo)
+        # que ya usa matrix.matrix_to_simple_percents al cargar del disco.
+        if self.mode == "simple":
+            matrix = mx.build_matrix_from_simple(self.percents)
+            self._loaded_percents = mx.matrix_to_advanced_percents(matrix)
+        else:
+            matrix = mx.build_matrix_from_advanced(self.percents)
+            self._loaded_percents = mx.matrix_to_simple_percents(matrix)
+        self._build_mode(new_mode)
 
     def onControl(self, control):
         # Respaldo por si en algun caso si llega (ver notas en _handle_mouse_click).
