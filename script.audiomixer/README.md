@@ -88,8 +88,13 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   hubiera ahi -- incluido `Include: peace.txt` si usas Peace GUI. Usalo solo si quieres que
   `config.txt` sea de uso exclusivo de este addon.
 - **Tecla rapida actual / Elegir tecla rapida...**: muestra la tecla activa (F9 por defecto) y
-  deja elegir otra de F2 a F12, o **"Otra (codigo hexadecimal)..."** para usar un boton de un
-  mando/dongle USB que no tenga tecla estandar. Para averiguar su codigo: activa
+  deja elegir otra de F2 a F12, **"Detectar pulsando el boton..."** (recomendado: abre una
+  pantalla que captura automaticamente el codigo real del siguiente boton que pulses -- sin
+  tener que leer ni convertir nada a mano; solo funciona en **Kodi 21 "Omega" o posterior**,
+  por un bug de versiones anteriores que impedia a los addons en Python leer ese codigo, ver
+  [xbmc/xbmc#23789](https://github.com/xbmc/xbmc/pull/23789)), o **"Otra (codigo
+  hexadecimal)..."** para introducirlo a mano si tu Kodi es mas antiguo. Para averiguar su
+  codigo a mano: activa
   **Ajustes > Sistema > Registros > Activar registro de depuracion**, pulsa el boton una vez
   y busca en el Log Viewer la linea `CInputManager::HandleKey: ... (0xXXXX, obc-NNNNN) pressed`
   -- el codigo a introducir es el **hexadecimal entre parentesis** (`0xXXXX`, con o sin el

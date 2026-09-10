@@ -85,3 +85,23 @@ msgstr "Codigo hexadecimal del boton: activa el registro de depuracion, pulsa el
 msgctxt "#30026"
 msgid "Codigo hexadecimal no valido."
 msgstr "Codigo hexadecimal no valido."
+
+msgctxt "#30027"
+msgid "Detectar pulsando el boton..."
+msgstr "Detectar pulsando el boton..."
+
+msgctxt "#30028"
+msgid "En la siguiente pantalla, pulsa UNA VEZ el boton del mando que quieras usar como tecla rapida. Tienes 15 segundos; pulsa Atras para cancelar. Solo funciona en Kodi 21 'Omega' o posterior."
+msgstr "En la siguiente pantalla, pulsa UNA VEZ el boton del mando que quieras usar como tecla rapida. Tienes 15 segundos; pulsa Atras para cancelar. Solo funciona en Kodi 21 'Omega' o posterior."
+
+msgctxt "#30029"
+msgid "No se ha podido detectar un codigo valido para ese boton. Tu version de Kodi puede que no lo permita (hace falta Kodi 21 'Omega' o posterior) -- usa 'Otra (codigo hexadecimal)...' con el metodo del log en su lugar."
+msgstr "No se ha podido detectar un codigo valido para ese boton. Tu version de Kodi puede que no lo permita (hace falta Kodi 21 'Omega' o posterior) -- usa 'Otra (codigo hexadecimal)...' con el metodo del log en su lugar."
+
+msgctxt "#30030"
+msgid "Codigo detectado"
+msgstr "Codigo detectado"
+
+msgctxt "#30031"
+msgid "Usar este boton como tecla rapida?"
+msgstr "Usar este boton como tecla rapida?"

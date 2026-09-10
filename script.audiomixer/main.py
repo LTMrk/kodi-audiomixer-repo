@@ -57,21 +57,48 @@ def _install_keymap(force):
             xbmcgui.NOTIFICATION_INFO, 6000)
 
 
+def _learn_hotkey():
+    """Captura el codigo de un boton pulsandolo, en vez de tener que leerlo
+    del log y convertirlo a mano -- usa xbmcgui.Action.getButtonCode(),
+    que Kodi entrega ya con el mismo valor entero que usa el interprete de
+    keymaps para emparejar <key id="N">. Solo funciona en Kodi 21 "Omega"
+    o posterior (xbmc/xbmc#23789: en versiones anteriores esa funcion
+    siempre devolvia 0 para addons en Python)."""
+    from resources.lib import key_learner
+
+    xbmcgui.Dialog().ok(ADDON_NAME, _L(30028))
+    code = key_learner.learn_button(os.path.join(settings.addon_path(), "resources", "media"))
+    if code is None:
+        return  # cancelado o se agoto el tiempo: sin aviso adicional
+    if not code:
+        _error(_L(30029))
+        return
+    if not xbmcgui.Dialog().yesno(ADDON_NAME, "%s: %s\n\n%s" % (_L(30030), code, _L(30031))):
+        return
+    settings.set_hotkey(str(code))
+    _install_keymap(force=True)
+
+
 def _pick_hotkey():
-    """Deja elegir la tecla rapida entre las disponibles, o introducir el
-    codigo hexadecimal que Kodi muestra entre parentesis en el log para
-    botones sin tecla estandar (p.ej. "0xf200" en una linea de log como
+    """Deja elegir la tecla rapida entre las disponibles, detectarla
+    pulsando el boton (ver _learn_hotkey), o introducir a mano el codigo
+    hexadecimal que Kodi muestra entre parentesis en el log para botones
+    sin tecla estandar (p.ej. "0xf200" en una linea de log como
     "0 (0xf200, obc-61697) pressed..." -- el numero "obc-NNNNN" es solo
-    cosmetico y NO sirve para el keymap, hay que usar el hexadecimal),
-    y reinstala el keymap con ella. Invocado desde Ajustes."""
+    cosmetico y NO sirve para el keymap, hay que usar el hexadecimal), y
+    reinstala el keymap con ella. Invocado desde Ajustes."""
     keys = keymap_installer.AVAILABLE_KEYS
     current = settings.get_hotkey()
     labels = [k.upper() + ("  (actual)" if k == current else "") for k in keys]
+    labels.append(_L(30027))  # "Detectar pulsando el boton..."
     labels.append(_L(30024))  # "Otra (codigo hexadecimal)..."
     idx = xbmcgui.Dialog().select(_L(30022), labels)
     if idx < 0:
         return
     if idx == len(keys):
+        _learn_hotkey()
+        return
+    if idx == len(keys) + 1:
         default_hex = "%x" % int(current) if current.isdigit() else ""
         text = xbmcgui.Dialog().input(_L(30025), defaultt=default_hex,
                                        type=xbmcgui.INPUT_ALPHANUM)

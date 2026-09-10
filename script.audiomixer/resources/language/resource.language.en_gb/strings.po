@@ -85,3 +85,23 @@ msgstr "Button's hex code: enable debug logging, press the button, and look in t
 msgctxt "#30026"
 msgid "Invalid hexadecimal code."
 msgstr "Invalid hexadecimal code."
+
+msgctxt "#30027"
+msgid "Detect by pressing the button..."
+msgstr "Detect by pressing the button..."
+
+msgctxt "#30028"
+msgid "On the next screen, press the remote button you want to use as the hotkey ONCE. You have 15 seconds; press Back to cancel. Only works on Kodi 21 'Omega' or newer."
+msgstr "On the next screen, press the remote button you want to use as the hotkey ONCE. You have 15 seconds; press Back to cancel. Only works on Kodi 21 'Omega' or newer."
+
+msgctxt "#30029"
+msgid "Could not detect a usable code for that button. Your Kodi version may not support this (Kodi 21 'Omega' or newer is required) -- use 'Other (hex code)...' with the log method instead."
+msgstr "Could not detect a usable code for that button. Your Kodi version may not support this (Kodi 21 'Omega' or newer is required) -- use 'Other (hex code)...' with the log method instead."
+
+msgctxt "#30030"
+msgid "Code detected"
+msgstr "Code detected"
+
+msgctxt "#30031"
+msgid "Use this button as the hotkey?"
+msgstr "Use this button as the hotkey?"
