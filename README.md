@@ -7,6 +7,14 @@ LFE, SL, SR) dentro de la mezcla final a estereo que hace **Equalizer APO** en W
 Ver [`script.audiomixer/README.md`](script.audiomixer/README.md) para el detalle del
 addon (requisitos, ajustes, uso).
 
+Tambien incluye **Identificador de Teclas/Mando** (`script.keyidentifier`): una
+herramienta de diagnostico independiente (funciona en cualquier plataforma, no solo
+Windows) que muestra en pantalla el codigo real de cualquier tecla o boton de mando que
+pulses -- util para averiguar el codigo hexadecimal que hace falta en Ajustes >
+"Elegir tecla rapida..." > "Otra (codigo hexadecimal)..." del Audio Channel Mixer sin
+tener que leer el log, y para comprobar si "pulsar OK sobre un boton enfocado" funciona
+en tu instalacion de Kodi.
+
 **Importante — dos hosts, dos propositos distintos:**
 - **GitHub Pages** (`https://ltmrk.github.io/kodi-audiomixer-repo/`) se usa *solo* para poder
   **navegar carpetas** desde Kodi (el dialogo "Instalar desde archivo zip" necesita listar

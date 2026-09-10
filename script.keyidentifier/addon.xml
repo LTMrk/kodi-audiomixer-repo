@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.keyidentifier"
+       name="Identificador de Teclas/Mando"
+       version="1.0.0"
+       provider-name="LTMrk">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.script" library="main.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="es_ES">Muestra el codigo real de cualquier tecla o boton de mando que pulses</summary>
+        <summary lang="en_GB">Shows the real code of any keyboard key or remote button you press</summary>
+        <description lang="es_ES">Herramienta de diagnostico independiente: abre una ventana que, cada vez que pulsas una tecla o un boton de mando, muestra el id de accion y el codigo real que usa Kodi internamente (el mismo valor que hace falta para enlazarlo en un keymap.xml), junto con un historial de las ultimas pulsaciones. Incluye un boton de prueba para comprobar si pulsar OK sobre un control enfocado funciona en tu instalacion de Kodi. Reutiliza la misma logica de captura (xbmcgui.Action.getButtonCode()) que usa "Detectar pulsando el boton..." en Audio Channel Mixer.</description>
+        <description lang="en_GB">Standalone diagnostic tool: opens a window that, every time you press a key or a remote button, shows the action id and the real code Kodi uses internally (the same value needed to bind it in a keymap.xml), along with a short history of recent presses. Includes a test button to check whether pressing OK on a focused control works on your Kodi install. Reuses the same capture logic (xbmcgui.Action.getButtonCode()) as "Detect by pressing the button..." in Audio Channel Mixer.</description>
+        <platform>all</platform>
+        <language>es_ES en_GB</language>
+        <license>MIT</license>
+        <source>https://github.com/LTMrk/kodi-audiomixer-repo</source>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
