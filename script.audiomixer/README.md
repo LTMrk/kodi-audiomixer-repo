@@ -7,6 +7,9 @@ Central) sin tocar el resto, aunque tu salida final sean solo 2 altavoces.
 
 Requisitos previos (fuera del addon):
 - Windows con **Equalizer APO** instalado en el dispositivo de salida, configurado a 6 canales (5.1).
+  Si no lo tienes instalado todavia, no hace falta que vayas a buscarlo: el addon lo detecta al
+  abrirse y se ofrece a descargar e instalar el instalador oficial (ver "Instalar Equalizer APO"
+  mas abajo).
 - **Peace GUI** es opcional (sirve para EQ por canal), este addon no lo sustituye: solo controla la matriz de mezcla (el `Copy:` del `config.txt`).
 
 ## Que hace
@@ -43,6 +46,16 @@ Requisitos previos (fuera del addon):
   vumetro simplemente no aparece; el resto del mezclador sigue funcionando igual.
   **Limitacion:** mide el dispositivo por defecto del sistema, no necesariamente el
   dispositivo concreto que tengas elegido en Ajustes > Dispositivo de salida si usas varios.
+- **Instalar Equalizer APO desde el propio addon** si todavia no lo tienes: al abrir el
+  mezclador (o desde Ajustes > "Instalar Equalizer APO...") se detecta si esta instalado
+  (buscando `Configurator.exe`/`EqualizerAPO*.dll` en la carpeta deducida de tu ruta de
+  `config.txt`, o en `C:\Program Files\EqualizerAPO` por defecto). Si no se detecta, se ofrece
+  descargar el instalador **oficial** (el mismo que enlaza equalizerapo.com, via SourceForge) y
+  lanzarlo. **No se salta ni automatiza UAC de ninguna forma**: Windows pedira permiso de
+  administrador por su cuenta, y el propio asistente de EqualizerAPO es quien deja elegir el
+  dispositivo de salida -- el addon solo evita que tengas que ir a buscarlo y descargarlo a
+  mano. Si la deteccion se equivoca (p.ej. lo tienes instalado en una ruta no estandar),
+  simplemente responde "Ya lo tengo instalado" y el addon sigue funcionando con normalidad.
 
 ## Instalacion
 

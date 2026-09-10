@@ -105,3 +105,27 @@ msgstr "Codigo detectado"
 msgctxt "#30031"
 msgid "Usar este boton como tecla rapida?"
 msgstr "Usar este boton como tecla rapida?"
+
+msgctxt "#30032"
+msgid "No se ha detectado Equalizer APO instalado en este equipo (revisa Ajustes > Ruta de config.txt si crees que esto es un error). Es imprescindible: el addon solo escribe la mezcla en su configuracion, es Equalizer APO quien la aplica de verdad al audio.\n\nSe puede descargar e instalar ahora (se abrira el instalador oficial de equalizerapo.com via SourceForge; Windows puede pedir permiso de administrador)."
+msgstr "No se ha detectado Equalizer APO instalado en este equipo (revisa Ajustes > Ruta de config.txt si crees que esto es un error). Es imprescindible: el addon solo escribe la mezcla en su configuracion, es Equalizer APO quien la aplica de verdad al audio.\n\nSe puede descargar e instalar ahora (se abrira el instalador oficial de equalizerapo.com via SourceForge; Windows puede pedir permiso de administrador)."
+
+msgctxt "#30033"
+msgid "Instalarlo ahora"
+msgstr "Instalarlo ahora"
+
+msgctxt "#30034"
+msgid "Ya lo tengo instalado"
+msgstr "Ya lo tengo instalado"
+
+msgctxt "#30035"
+msgid "Instalar Equalizer APO..."
+msgstr "Instalar Equalizer APO..."
+
+msgctxt "#30036"
+msgid "No se pudo descargar Equalizer APO:\n%s\n\nPuedes descargarlo e instalarlo tu mismo desde https://equalizerapo.com/"
+msgstr "No se pudo descargar Equalizer APO:\n%s\n\nPuedes descargarlo e instalarlo tu mismo desde https://equalizerapo.com/"
+
+msgctxt "#30037"
+msgid "Se ha lanzado el instalador de Equalizer APO. Sigue sus pasos (puede pedirte permiso de administrador) y elige el dispositivo de salida donde quieras usarlo. Cuando termine, puede que Windows te pida reiniciar sesion o el equipo. Despues, vuelve a abrir este addon."
+msgstr "Se ha lanzado el instalador de Equalizer APO. Sigue sus pasos (puede pedirte permiso de administrador) y elige el dispositivo de salida donde quieras usarlo. Cuando termine, puede que Windows te pida reiniciar sesion o el equipo. Despues, vuelve a abrir este addon."

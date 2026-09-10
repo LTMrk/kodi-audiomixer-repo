@@ -12,6 +12,7 @@ from resources.lib import addon_settings as settings
 from resources.lib.addon_settings import ADDON
 from resources.lib import apo_writer
 from resources.lib import keymap_installer
+from resources.lib import eqapo_installer
 
 ADDON_NAME = "Audio Channel Mixer"
 
@@ -121,6 +122,27 @@ def _pick_hotkey():
     _install_keymap(force=True)
 
 
+def _install_eqapo():
+    """Descarga el instalador oficial de Equalizer APO y lo lanza. Nunca
+    se salta UAC ni usa flags de instalacion silenciosa: Windows pedira
+    elevacion por su cuenta y el propio asistente de EqualizerAPO deja
+    elegir el dispositivo de salida, igual que si el usuario lo hubiera
+    descargado el mismo. Invocado desde Ajustes o, si el usuario acepta,
+    desde _check_prerequisites() al no detectarlo instalado."""
+    progress = xbmcgui.DialogProgress()
+    progress.create(ADDON_NAME, "Descargando Equalizer APO...")
+    try:
+        installer_path = eqapo_installer.download_installer(progress_dialog=progress)
+    except eqapo_installer.DownloadError as e:
+        progress.close()
+        _error(_L(30036) % e)
+        return
+    progress.close()
+
+    eqapo_installer.launch_installer(installer_path)
+    xbmcgui.Dialog().ok(ADDON_NAME, _L(30037))
+
+
 def _include_already_configured(write_path):
     """Comprueba (mejor esfuerzo, no bloqueante) si el config.txt real del
     usuario ya incluye nuestro archivo local. None = no se pudo comprobar
@@ -148,6 +170,15 @@ def _check_prerequisites():
         _error("Este complemento solo funciona en Windows, junto con Equalizer APO.\n"
                "El sistema operativo detectado no es Windows.")
         return False
+
+    if not eqapo_installer.is_installed():
+        if xbmcgui.Dialog().yesno(ADDON_NAME, _L(30032),
+                                   yeslabel=_L(30033), nolabel=_L(30034)):
+            _install_eqapo()
+            return False
+        # El usuario dice que ya lo tiene -- puede estar instalado en una
+        # ruta no estandar que nuestra deteccion no reconoce -- asi que
+        # seguimos con el flujo normal en vez de bloquear.
 
     write_path, using_fallback = settings.resolve_write_path()
 
@@ -201,6 +232,8 @@ if __name__ == "__main__":
         _pick_device()
     elif len(sys.argv) > 1 and sys.argv[1] == "pick_hotkey":
         _pick_hotkey()
+    elif len(sys.argv) > 1 and sys.argv[1] == "install_eqapo":
+        _install_eqapo()
     elif _check_prerequisites():
         _install_keymap(force=False)
         try:

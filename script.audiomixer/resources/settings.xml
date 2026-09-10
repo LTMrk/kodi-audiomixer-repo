@@ -3,6 +3,8 @@
     <category label="30000">
         <setting id="config_path" type="text" label="30001"
                  default="C:\Program Files\EqualizerAPO\config\config.txt"/>
+        <setting id="install_eqapo" type="action" label="30035"
+                 action="RunScript(script.audiomixer,install_eqapo)"/>
         <setting id="default_mode" type="labelenum" label="30002" values="Simple|Avanzado" default="Simple"/>
         <setting id="debounce_ms" type="slider" label="30003" default="180"
                  range="50,50,1000" option="int"/>

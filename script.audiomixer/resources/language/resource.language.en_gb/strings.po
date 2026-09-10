@@ -105,3 +105,27 @@ msgstr "Code detected"
 msgctxt "#30031"
 msgid "Use this button as the hotkey?"
 msgstr "Use this button as the hotkey?"
+
+msgctxt "#30032"
+msgid "Equalizer APO was not detected on this computer (check Settings > config.txt path if you think this is wrong). It's required: this addon only writes the mix into its configuration, Equalizer APO is what actually applies it to the audio.\n\nIt can be downloaded and installed now (the official installer from equalizerapo.com via SourceForge will open; Windows may ask for administrator permission)."
+msgstr "Equalizer APO was not detected on this computer (check Settings > config.txt path if you think this is wrong). It's required: this addon only writes the mix into its configuration, Equalizer APO is what actually applies it to the audio.\n\nIt can be downloaded and installed now (the official installer from equalizerapo.com via SourceForge will open; Windows may ask for administrator permission)."
+
+msgctxt "#30033"
+msgid "Install it now"
+msgstr "Install it now"
+
+msgctxt "#30034"
+msgid "I already have it installed"
+msgstr "I already have it installed"
+
+msgctxt "#30035"
+msgid "Install Equalizer APO..."
+msgstr "Install Equalizer APO..."
+
+msgctxt "#30036"
+msgid "Could not download Equalizer APO:\n%s\n\nYou can download and install it yourself from https://equalizerapo.com/"
+msgstr "Could not download Equalizer APO:\n%s\n\nYou can download and install it yourself from https://equalizerapo.com/"
+
+msgctxt "#30037"
+msgid "The Equalizer APO installer has been launched. Follow its steps (it may ask for administrator permission) and pick the output device you want to use it on. When it finishes, Windows may ask you to log off or restart. Afterwards, open this addon again."
+msgstr "The Equalizer APO installer has been launched. Follow its steps (it may ask for administrator permission) and pick the output device you want to use it on. When it finishes, Windows may ask you to log off or restart. Afterwards, open this addon again."
