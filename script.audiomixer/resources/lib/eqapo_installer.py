@@ -22,7 +22,6 @@ addon sin dependencias externas, sin verificacion de firma de codigo):
   instalador real pesa varios MB) antes de ofrecer lanzarlo.
 """
 import os
-import subprocess
 import tempfile
 import urllib.error
 import urllib.parse
@@ -149,6 +148,14 @@ def launch_installer(installer_path):
     """Lanza el instalador oficial tal cual (sin flags de instalacion
     silenciosa): Windows pedira elevacion de permisos (UAC) por su
     cuenta, y el propio asistente de EqualizerAPO dejara elegir a que
-    dispositivo(s) instalarlo. No espera a que termine."""
-    _log("lanzando instalador: %r" % installer_path)
-    subprocess.Popen([installer_path], shell=False)
+    dispositivo(s) instalarlo. No espera a que termine.
+
+    subprocess.Popen (CreateProcess) NO puede lanzar un ejecutable cuyo
+    manifiesto exige elevacion si el proceso que lo lanza (Kodi) no esta
+    ya elevado -- falla directamente con WinError 740 ("la operacion
+    solicitada requiere elevacion") en vez de mostrar el dialogo de UAC.
+    Hace falta pasar por ShellExecute con el verbo "runas" (lo mismo que
+    hace el Explorador de Windows al mostrar ese dialogo); os.startfile
+    con operation="runas" es la forma estandar de hacerlo desde Python."""
+    _log("lanzando instalador (runas): %r" % installer_path)
+    os.startfile(installer_path, "runas")

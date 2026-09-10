@@ -2,7 +2,7 @@
 <addons>
 <addon id="script.audiomixer"
        name="Audio Channel Mixer (EQ APO)"
-       version="1.5.0"
+       version="1.5.1"
        provider-name="LTMrk">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
