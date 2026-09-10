@@ -57,6 +57,7 @@ SLIDER_STEP = 2  # % que avanza cada pulsacion de izquierda/derecha
 
 ACTION_MOVE_LEFT = 1
 ACTION_MOVE_RIGHT = 2
+ACTION_SELECT_ITEM = 7
 ACTION_PREVIOUS_MENU = 10
 ACTION_NAV_BACK = 92
 ACTION_MOUSE_LEFT_CLICK = 100
@@ -362,6 +363,15 @@ class MixerWindow(xbmcgui.WindowDialog):
             self._handle_mouse_click(action)
         elif action_id in (ACTION_MOVE_LEFT, ACTION_MOVE_RIGHT):
             self._handle_keyboard_step(action_id)
+        elif action_id == ACTION_SELECT_ITEM:
+            # El clic nativo de Kodi sobre un ControlButton enfocado
+            # (OnClick/onControl al pulsar OK/Intro) no llega de forma
+            # fiable en este entorno -- confirmado con script.keyidentifier
+            # (su boton de prueba tampoco se activaba con OK). Igual que
+            # ya se hace a mano para el clic de raton en
+            # _handle_mouse_click, se dispara aqui el mismo manejador que
+            # usaria un clic nativo, segun que control tenga el foco.
+            self.onClick(self.getFocusId())
 
     def _focused_slider_key(self):
         return self.slider_ids.get(self.getFocusId())

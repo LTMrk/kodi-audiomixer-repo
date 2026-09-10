@@ -145,6 +145,13 @@ Entra en **Complementos > Mis complementos > Audio Channel Mixer > Configurar**,
   `config.txt` dejando solo esos bloques propios (ver "Ajustes del addon" mas arriba).
 - Si ni el `config.txt` real ni el archivo de respaldo se pueden escribir, revisa permisos y
   espacio en disco.
+- El clic de raton sobre "Cambiar de modo"/"Guardar y cerrar" ya se gestionaba a mano por
+  coordenadas (ver mas arriba) porque el clic nativo de Kodi (`OnClick`/`onControl`) no llega
+  de forma fiable en algunos entornos. Se confirmo (con el addon separado **Identificador de
+  Teclas/Mando**, `script.keyidentifier`, incluido en este mismo repositorio) que **OK/Intro
+  por teclado o mando tampoco llegaba** por el mismo motivo -- ahora tambien se gestiona a
+  mano (segun que control tenga el foco al recibir la accion `ACTION_SELECT_ITEM`), igual que
+  el clic de raton.
 
 ## Que pasa si algo no esta bien configurado
 

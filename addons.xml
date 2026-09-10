@@ -2,7 +2,7 @@
 <addons>
 <addon id="script.audiomixer"
        name="Audio Channel Mixer (EQ APO)"
-       version="1.4.1"
+       version="1.4.2"
        provider-name="LTMrk">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
@@ -32,7 +32,7 @@
 </addon>
 <addon id="script.keyidentifier"
        name="Identificador de Teclas/Mando"
-       version="1.0.0"
+       version="1.0.1"
        provider-name="LTMrk">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
