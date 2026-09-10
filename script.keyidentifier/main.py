@@ -27,9 +27,11 @@ MEDIA = os.path.join(os.path.dirname(__file__), "resources", "media")
 ACTION_SELECT_ITEM = 7
 ACTION_PREVIOUS_MENU = 10
 ACTION_NAV_BACK = 92
+ACTION_MOUSE_START = 100
 ACTION_MOUSE_LEFT_CLICK = 100
 ACTION_MOUSE_DRAG = 106
 ACTION_MOUSE_MOVE = 107
+ACTION_MOUSE_END = 109
 
 MAX_HISTORY = 10
 
@@ -123,6 +125,16 @@ class KeyIdWindow(xbmcgui.WindowDialog):
             self.onClick(self.test_btn_id)
         elif self._point_in(x, y, self._close_rect):
             self.onClick(self.close_btn_id)
+        else:
+            # Como ultimo recurso (igual que hace el mezclador): si el
+            # clic no cae en ningun rectangulo conocido -- las coordenadas
+            # de raton pueden no encajar exactamente segun resolucion o
+            # escalado de pantalla -- se prueba con lo que tenga el foco
+            # ahora mismo, que normalmente es justo lo que se intentaba
+            # pulsar.
+            focus_id = self.getFocusId()
+            _log("clic fuera de los rects conocidos (%s,%s), uso el foco=%s" % (x, y, focus_id))
+            self.onClick(focus_id)
 
     @staticmethod
     def _point_in(x, y, rect):
@@ -130,8 +142,14 @@ class KeyIdWindow(xbmcgui.WindowDialog):
         return rx <= x <= rx + rw and ry <= y <= ry + rh
 
     def _record(self, action_id, button_code):
+        is_mouse = ACTION_MOUSE_START <= action_id <= ACTION_MOUSE_END
         if button_code:
             line = "action id=%d  |  codigo=%d (0x%x)" % (action_id, button_code, button_code)
+        elif is_mouse:
+            # Un clic/gesto de raton nunca lleva codigo de boton (eso solo
+            # existe para teclado/mando) -- el 0 aqui es normal, no indica
+            # ningun problema ni version antigua de Kodi.
+            line = "action id=%d  |  (accion de raton, sin codigo -- normal)" % action_id
         elif button_code == 0:
             line = ("action id=%d  |  codigo no disponible (0) -- puede que tu version de "
                      "Kodi sea anterior a la 21 'Omega'" % action_id)
